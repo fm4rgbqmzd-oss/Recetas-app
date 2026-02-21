@@ -1,10 +1,10 @@
 const CACHE_NAME = 'recetas-app-v1';
 const urlsToCache = [
-  '/',
-  '/index.html',
-  '/styles.css',
-  '/app.js',
-  '/manifest.json'
+  '/Recetas-app/',
+  '/Recetas-app/index.html',
+  '/Recetas-app/styles.css',
+  '/Recetas-app/app.js',
+  '/Recetas-app/manifest.json'
 ];
 
 self.addEventListener('install', event => {
