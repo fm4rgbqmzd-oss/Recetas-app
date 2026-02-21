@@ -2,7 +2,7 @@
   "name": "Mis Recetas",
   "short_name": "Recetas",
   "description": "App de gestión de recetas con despensa inteligente",
-  "start_url": "/",
+  "start_url": "/Recetas-app/",
   "display": "standalone",
   "background_color": "#F2F2F7",
   "theme_color": "#007AFF",
