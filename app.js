@@ -221,12 +221,124 @@ const state = {
     searchQuery: ''
 };
 
+// Bilingual ingredient dictionary ES <-> CA
+const ingredientDictionary = {
+    // Básicos
+    'harina': ['farina', 'harina'],
+    'azucar': ['sucre', 'azucar', 'azúcar'],
+    'sal': ['sal'],
+    'aceite': ['oli', 'aceite'],
+    'agua': ['aigua', 'agua'],
+    'leche': ['llet', 'leche'],
+    'mantequilla': ['mantega', 'mantequilla'],
+    'huevo': ['ou', 'huevo'],
+    'huevos': ['ous', 'huevos'],
+    
+    // Lácteos
+    'queso': ['formatge', 'queso'],
+    'nata': ['nata', 'crema'],
+    'yogur': ['iogurt', 'yogur'],
+    
+    // Carnes
+    'pollo': ['pollastre', 'pollo'],
+    'cerdo': ['porc', 'cerdo'],
+    'ternera': ['vedella', 'ternera'],
+    'cordero': ['xai', 'cordero'],
+    'jamon': ['pernil', 'jamón', 'jamon'],
+    
+    // Pescados
+    'pescado': ['peix', 'pescado'],
+    'salmon': ['salmó', 'salmó', 'salmon', 'salmón'],
+    'atun': ['tonyina', 'atún', 'atun'],
+    'merluza': ['lluç', 'merluza'],
+    
+    // Verduras
+    'tomate': ['tomàquet', 'tomaquet', 'tomate'],
+    'cebolla': ['ceba', 'cebolla'],
+    'ajo': ['all', 'ajo'],
+    'patata': ['patata', 'creïlla'],
+    'zanahoria': ['pastanaga', 'zanahoria'],
+    'pimiento': ['pebrot', 'pimiento'],
+    'lechuga': ['enciam', 'lechuga'],
+    'espinaca': ['espinac', 'espinaca'],
+    'calabacin': ['carabassó', 'calabacín', 'calabacin'],
+    'berenjena': ['albergínia', 'alberginia', 'berenjena'],
+    
+    // Frutas
+    'manzana': ['poma', 'manzana'],
+    'naranja': ['taronja', 'naranja'],
+    'platano': ['plàtan', 'platan', 'plátano', 'platano'],
+    'fresa': ['maduixa', 'fresa'],
+    'limon': ['llimona', 'limón', 'limon'],
+    'pera': ['pera'],
+    'melocoton': ['préssec', 'pressec', 'melocotón', 'melocoton'],
+    
+    // Legumbres
+    'lentejas': ['llenties', 'lentejas'],
+    'garbanzos': ['cigrons', 'garbanzos'],
+    'judias': ['mongetes', 'judías', 'judias'],
+    
+    // Cereales
+    'arroz': ['arròs', 'arros', 'arroz'],
+    'pasta': ['pasta'],
+    'pan': ['pa', 'pan'],
+    
+    // Especias
+    'pimienta': ['pebre', 'pimienta'],
+    'oregano': ['orenga', 'orégano', 'oregano'],
+    'perejil': ['julivert', 'perejil'],
+    'tomillo': ['farigola', 'tomillo'],
+    'romero': ['romaní', 'romani', 'romero'],
+    
+    // Otros
+    'chocolate': ['xocolata', 'chocolate'],
+    'cafe': ['cafè', 'cafe', 'café'],
+    'te': ['te', 'té'],
+    'vino': ['vi', 'vino'],
+    'cerveza': ['cervesa', 'cerveza']
+};
+
+// Create reverse lookup for faster matching
+const createIngredientLookup = () => {
+    const lookup = {};
+    for (const [key, values] of Object.entries(ingredientDictionary)) {
+        values.forEach(value => {
+            const normalized = normalizeText(value);
+            if (!lookup[normalized]) {
+                lookup[normalized] = new Set();
+            }
+            values.forEach(v => lookup[normalized].add(normalizeText(v)));
+        });
+    }
+    return lookup;
+};
+
+const ingredientLookup = createIngredientLookup();
+
 // Utility Functions
 const normalizeText = (text) => {
     return text.toLowerCase()
         .normalize('NFD')
         .replace(/[\u0300-\u036f]/g, '')
         .trim();
+};
+
+// Check if two ingredient names match (considering bilingual equivalents)
+const ingredientsMatch = (name1, name2) => {
+    const norm1 = normalizeText(name1);
+    const norm2 = normalizeText(name2);
+    
+    // Direct match
+    if (norm1 === norm2) return true;
+    
+    // Check if they're bilingual equivalents
+    const equivalents1 = ingredientLookup[norm1];
+    if (equivalents1 && equivalents1.has(norm2)) return true;
+    
+    const equivalents2 = ingredientLookup[norm2];
+    if (equivalents2 && equivalents2.has(norm1)) return true;
+    
+    return false;
 };
 
 const generateId = () => {
@@ -536,10 +648,13 @@ const createRecipeCard = (recipe) => {
 
 const calculateMatch = (recipe) => {
     if (!recipe.ingredients.length) return 0;
-    const pantryNames = new Set(state.pantry.map(p => normalizeText(p.name)));
-    const matched = recipe.ingredients.filter(i => 
-        pantryNames.has(normalizeText(i.name))
+    
+    const matched = recipe.ingredients.filter(recipeIng => 
+        state.pantry.some(pantryItem => 
+            ingredientsMatch(recipeIng.name, pantryItem.name)
+        )
     ).length;
+    
     return (matched / recipe.ingredients.length) * 100;
 };
 
@@ -602,7 +717,7 @@ const showRecipeDetail = (recipe) => {
 
                 <h2 style="font-size: 20px; font-weight: 600; margin: 24px 0 12px;">${t('ingredientsTitle')}</h2>
                 ${recipe.ingredients.map(ing => {
-                    const hasIt = state.pantry.some(p => normalizeText(p.name) === normalizeText(ing.name));
+                    const hasIt = state.pantry.some(p => ingredientsMatch(p.name, ing.name));
                     return `
                         <div style="display: flex; gap: 12px; margin-bottom: 12px; align-items: flex-start;">
                             <div style="color: ${hasIt ? 'var(--success-color)' : 'var(--text-secondary)'}; font-size: 20px;">
@@ -645,8 +760,11 @@ const showRecipeDetail = (recipe) => {
 };
 
 const getMissingIngredients = (recipe) => {
-    const pantryNames = new Set(state.pantry.map(p => normalizeText(p.name)));
-    return recipe.ingredients.filter(i => !pantryNames.has(normalizeText(i.name)));
+    return recipe.ingredients.filter(recipeIng => 
+        !state.pantry.some(pantryItem => 
+            ingredientsMatch(recipeIng.name, pantryItem.name)
+        )
+    );
 };
 
 window.addMissingToShopping = () => {
@@ -1105,7 +1223,7 @@ window.addToPantry = () => {
     
     if (!name) return;
     
-    if (state.pantry.some(p => normalizeText(p.name) === normalizeText(name))) {
+    if (state.pantry.some(p => ingredientsMatch(p.name, name))) {
         alert(t('alreadyExists'));
         return;
     }
