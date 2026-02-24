@@ -1,99 +1,87 @@
-// Complete ES-CA Bilingual Dictionary
-const ingredientPairs = [
-    // Básicos y condimentos
-    ['harina', 'farina'], ['azucar', 'sucre'], ['azúcar', 'sucre'], ['sal', 'sal'],
-    ['aceite', 'oli'], ['agua', 'aigua'], ['mantequilla', 'mantega'], ['manteca', 'mantega'],
-    ['pimienta', 'pebre'], ['vinagre', 'vinagre'], ['aceitunas', 'olives'], ['olivas', 'olives'],
-    
-    // Lácteos y huevos
-    ['leche', 'llet'], ['nata', 'nata'], ['crema', 'crema'], ['yogur', 'iogurt'],
-    ['queso', 'formatge'], ['huevo', 'ou'], ['huevos', 'ous'], ['clara', 'clara'],
-    ['yema', 'rovell'], ['mantequilla', 'mantega'],
-    
+// Optimized Bilingual Dictionary - ES <-> CA
+const bilingualPairs = {
+    // Básicos
+    'harina': 'farina', 'azucar': 'sucre', 'azúcar': 'sucre', 'sal': 'sal',
+    'aceite': 'oli', 'agua': 'aigua', 'mantequilla': 'mantega',
+    // Lácteos
+    'leche': 'llet', 'queso': 'formatge', 'yogur': 'iogurt', 'nata': 'nata',
+    'huevo': 'ou', 'huevos': 'ous', 'yema': 'rovell',
     // Carnes
-    ['pollo', 'pollastre'], ['gallina', 'gallina'], ['pavo', 'gall dindi'], ['pato', 'ànec'],
-    ['cerdo', 'porc'], ['ternera', 'vedella'], ['vaca', 'vaca'], ['buey', 'bou'],
-    ['cordero', 'xai'], ['cabrito', 'cabrit'], ['conejo', 'conill'], ['liebre', 'llebre'],
-    ['jamon', 'pernil'], ['jamón', 'pernil'], ['tocino', 'cansalada'], ['bacon', 'bacon'],
-    ['chorizo', 'xoriço'], ['salchicha', 'salsitxa'], ['morcilla', 'botifarra'],
-    
-    // Pescados y mariscos
-    ['pescado', 'peix'], ['salmon', 'salmó'], ['salmón', 'salmó'], ['atun', 'tonyina'],
-    ['atún', 'tonyina'], ['merluza', 'lluç'], ['bacalao', 'bacallà'], ['sardina', 'sardina'],
-    ['anchoa', 'anxova'], ['boquerón', 'seitó'], ['trucha', 'truita'], ['dorada', 'orada'],
-    ['lubina', 'llobarro'], ['rape', 'rap'], ['lenguado', 'llenguado'],
-    ['gamba', 'gamba'], ['langostino', 'llagostí'], ['langosta', 'llagosta'],
-    ['mejillon', 'musclo'], ['mejillón', 'musclo'], ['almeja', 'cloïssa'], ['ostra', 'ostra'],
-    ['calamar', 'calamar'], ['pulpo', 'pop'], ['sepia', 'sípia'], ['marisco', 'marisc'],
-    
-    // Verduras y hortalizas
-    ['tomate', 'tomàquet'], ['tomate', 'tomaquet'], ['cebolla', 'ceba'], ['ajo', 'all'],
-    ['patata', 'patata'], ['papa', 'patata'], ['zanahoria', 'pastanaga'], ['puerro', 'porro'],
-    ['calabacin', 'carabassó'], ['calabacín', 'carabassó'], ['calabaza', 'carbassa'],
-    ['berenjena', 'albergínia'], ['pimiento', 'pebrot'], ['pimentón', 'pebre'],
-    ['chile', 'xili'], ['pepino', 'cogombre'], ['lechuga', 'enciam'], ['escarola', 'escarola'],
-    ['espinaca', 'espinac'], ['acelga', 'bleda'], ['col', 'col'], ['repollo', 'col'],
-    ['coliflor', 'coliflor'], ['brocoli', 'bròquil'], ['brócoli', 'bròquil'],
-    ['alcachofa', 'carxofa'], ['esparrago', 'espàrrec'], ['espárrago', 'espàrrec'],
-    ['judia', 'mongeta'], ['judía', 'mongeta'], ['guisante', 'pèsol'], ['haba', 'fava'],
-    ['garbanzo', 'cigró'], ['lenteja', 'llentia'], ['seta', 'bolet'], ['champiñon', 'xampinyó'],
-    ['champiñón', 'xampinyó'], ['trufa', 'tòfona'], ['maiz', 'blat de moro'], ['maíz', 'blat de moro'],
-    ['remolacha', 'remolatxa'], ['rabano', 'rave'], ['rábano', 'rave'], ['nabo', 'nap'],
-    
+    'pollo': 'pollastre', 'cerdo': 'porc', 'ternera': 'vedella', 'cordero': 'xai',
+    'jamon': 'pernil', 'jamón': 'pernil', 'tocino': 'cansalada',
+    'chorizo': 'xoriço', 'salchicha': 'salsitxa',
+    // Pescados
+    'pescado': 'peix', 'salmon': 'salmó', 'salmón': 'salmó', 'atun': 'tonyina', 'atún': 'tonyina',
+    'merluza': 'lluç', 'bacalao': 'bacallà', 'sardina': 'sardina',
+    'gamba': 'gamba', 'langostino': 'llagostí', 'mejillon': 'musclo', 'mejillón': 'musclo',
+    // Verduras
+    'tomate': 'tomàquet', 'cebolla': 'ceba', 'ajo': 'all', 'patata': 'patata',
+    'zanahoria': 'pastanaga', 'puerro': 'porro', 'calabacin': 'carabassó', 'calabacín': 'carabassó',
+    'berenjena': 'albergínia', 'pimiento': 'pebrot', 'pepino': 'cogombre',
+    'lechuga': 'enciam', 'espinaca': 'espinac', 'col': 'col', 'coliflor': 'coliflor',
+    'brocoli': 'bròquil', 'brócoli': 'bròquil', 'alcachofa': 'carxofa',
+    'esparrago': 'espàrrec', 'espárrago': 'espàrrec', 'judia': 'mongeta', 'judía': 'mongeta',
+    'guisante': 'pèsol', 'haba': 'fava', 'garbanzo': 'cigró', 'lenteja': 'llentia',
+    'champiñon': 'xampinyó', 'champiñón': 'xampinyó', 'seta': 'bolet',
+    'maiz': 'blat de moro', 'maíz': 'blat de moro', 'remolacha': 'remolatxa',
     // Frutas
-    ['manzana', 'poma'], ['pera', 'pera'], ['platano', 'plàtan'], ['plátano', 'plàtan'],
-    ['naranja', 'taronja'], ['mandarina', 'mandarina'], ['limon', 'llimona'], ['limón', 'llimona'],
-    ['lima', 'llima'], ['pomelo', 'aranja'], ['uva', 'raïm'], ['cereza', 'cirera'],
-    ['fresa', 'maduixa'], ['frambuesa', 'gerd'], ['mora', 'móra'], ['arandano', 'nabiu'],
-    ['arándano', 'nabiu'], ['grosella', 'grosella'], ['melocoton', 'préssec'], ['melocotón', 'préssec'],
-    ['albaricoque', 'albercoc'], ['ciruela', 'pruna'], ['sandia', 'síndria'], ['sandía', 'síndria'],
-    ['melon', 'meló'], ['melón', 'meló'], ['kiwi', 'kiwi'], ['mango', 'mango'],
-    ['papaya', 'papaia'], ['piña', 'pinya'], ['coco', 'coco'], ['aguacate', 'alvocat'],
-    ['higo', 'figa'], ['datil', 'dàtil'], ['dátil', 'dàtil'], ['pasa', 'pansa'],
-    ['ciruela pasa', 'pruna seca'], ['orejón', 'orellana'],
-    
-    // Cereales y legumbres
-    ['arroz', 'arròs'], ['arroz', 'arros'], ['trigo', 'blat'], ['avena', 'civada'],
-    ['cebada', 'ordi'], ['centeno', 'sègol'], ['maiz', 'blat de moro'], ['quinoa', 'quinoa'],
-    ['lentejas', 'llenties'], ['garbanzos', 'cigrons'], ['judias', 'mongetes'],
-    ['alubias', 'mongetes'], ['habas', 'faves'], ['soja', 'soia'],
-    
-    // Pan y pasta
-    ['pan', 'pa'], ['barra', 'barra'], ['panecillo', 'panellet'], ['bollo', 'brioix'],
-    ['tostada', 'torrada'], ['pasta', 'pasta'], ['espagueti', 'espagueti'], ['macarron', 'macarró'],
-    ['macarrón', 'macarró'], ['fideo', 'fideu'], ['lasaña', 'lasanya'], ['ravioli', 'ravioli'],
-    ['ñoqui', 'nyoqui'], ['tallarines', 'tallarins'],
-    
+    'manzana': 'poma', 'pera': 'pera', 'platano': 'plàtan', 'plátano': 'plàtan',
+    'naranja': 'taronja', 'mandarina': 'mandarina', 'limon': 'llimona', 'limón': 'llimona',
+    'uva': 'raïm', 'cereza': 'cirera', 'fresa': 'maduixa', 'frambuesa': 'gerd',
+    'melocoton': 'préssec', 'melocotón': 'préssec', 'ciruela': 'pruna',
+    'sandia': 'síndria', 'sandía': 'síndria', 'melon': 'meló', 'melón': 'meló',
+    'kiwi': 'kiwi', 'mango': 'mango', 'piña': 'pinya', 'aguacate': 'alvocat',
+    // Cereales
+    'arroz': 'arròs', 'trigo': 'blat', 'avena': 'civada', 'pan': 'pa',
+    'pasta': 'pasta', 'lentejas': 'llenties', 'garbanzos': 'cigrons',
     // Frutos secos
-    ['nuez', 'nou'], ['almendra', 'ametlla'], ['avellana', 'avellana'], ['pistacho', 'pistatxo'],
-    ['castaña', 'castanya'], ['piñon', 'pinyó'], ['piñón', 'pinyó'], ['cacahuete', 'cacauet'],
-    ['anacardo', 'anacardo'], ['pacana', 'pacana'],
-    
-    // Dulces y postres
-    ['azucar', 'sucre'], ['azúcar', 'sucre'], ['miel', 'mel'], ['chocolate', 'xocolata'],
-    ['cacao', 'cacau'], ['vainilla', 'vainilla'], ['canela', 'canyella'], ['tarta', 'pastís'],
-    ['pastel', 'pastís'], ['bizcocho', 'bescuit'], ['galleta', 'galeta'], ['helado', 'gelat'],
-    ['flan', 'flam'], ['natilla', 'natilla'], ['crema', 'crema'], ['nata', 'nata'],
-    ['mermelada', 'melmelada'], ['confitura', 'confitura'], ['dulce de leche', 'dolç de llet'],
-    
+    'nuez': 'nou', 'almendra': 'ametlla', 'avellana': 'avellana', 'pistacho': 'pistatxo',
+    'castaña': 'castanya', 'cacahuete': 'cacauet',
+    // Especias
+    'oregano': 'orenga', 'orégano': 'orenga', 'albahaca': 'alfàbrega',
+    'tomillo': 'farigola', 'romero': 'romaní', 'perejil': 'julivert',
+    'cilantro': 'coriandre', 'menta': 'menta', 'canela': 'canyella',
+    // Dulces
+    'chocolate': 'xocolata', 'cacao': 'cacau', 'miel': 'mel',
+    'tarta': 'pastís', 'bizcocho': 'bescuit', 'galleta': 'galeta',
     // Bebidas
-    ['agua', 'aigua'], ['cafe', 'cafè'], ['café', 'cafè'], ['te', 'te'], ['té', 'te'],
-    ['leche', 'llet'], ['zumo', 'suc'], ['jugo', 'suc'], ['refresco', 'refresc'],
-    ['cerveza', 'cervesa'], ['vino', 'vi'], ['cava', 'cava'], ['licor', 'licor'],
-    ['ron', 'rom'], ['whisky', 'whisky'], ['vodka', 'vodka'], ['ginebra', 'ginebra'],
+    'cafe': 'cafè', 'café': 'cafè', 'te': 'te', 'té': 'te',
+    'vino': 'vi', 'cerveza': 'cervesa', 'zumo': 'suc'
+};
+
+// Create reverse lookup
+const reverseLookup = {};
+Object.keys(bilingualPairs).forEach(es => {
+    const ca = bilingualPairs[es];
+    reverseLookup[ca] = es;
+});
+
+const normalizeText = (text) => {
+    return text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
+};
+
+const ingredientsMatch = (name1, name2) => {
+    const norm1 = normalizeText(name1);
+    const norm2 = normalizeText(name2);
     
-    // Hierbas y especias
-    ['oregano', 'orenga'], ['orégano', 'orenga'], ['albahaca', 'alfàbrega'], ['tomillo', 'farigola'],
-    ['romero', 'romaní'], ['romero', 'romani'], ['laurel', 'llorer'], ['perejil', 'julivert'],
-    ['cilantro', 'coriandre'], ['menta', 'menta'], ['hierbabuena', 'herba-bona'],
-    ['eneldo', 'anet'], ['estragon', 'estragó'], ['estragón', 'estragó'], ['comino', 'comí'],
-    ['curcuma', 'cúrcuma'], ['cúrcuma', 'cúrcuma'], ['jengibre', 'gingebre'], ['curry', 'curri'],
+    if (norm1 === norm2) return true;
+    
+    if (bilingualPairs[norm1] && normalizeText(bilingualPairs[norm1]) === norm2) return true;
+    if (reverseLookup[norm1] && normalizeText(reverseLookup[norm1]) === norm2) return true;
+    
+    return false;
+};
+
+// Translations
+const translations = {
+    es: {
+        recipes: 'Recetas', pantry: 'Despensa', shopping: 'Compras',
         add: 'Agregar', edit: 'Editar', delete: 'Eliminar', cancel: 'Cancelar', save: 'Guardar',
         myRecipes: 'Mis Recetas', searchRecipes: 'Buscar recetas...', all: 'Todas',
         canMake: 'Puedo hacer', almost: 'Casi', noRecipes: 'No hay recetas',
         tapToAdd: 'Toca el botón + para agregar', newRecipe: 'Nueva Receta', editRecipe: 'Editar Receta',
         min: 'min', servings: 'porciones', easy: 'Fácil', medium: 'Media', hard: 'Difícil',
-        haveAll: 'Tienes todos los ingredientes!', missing: 'Te faltan', ingredients: 'ingredientes',
+        haveAll: '¡Tienes todos los ingredientes!', missing: 'Te faltan', ingredients: 'ingredientes',
         addMissing: 'Agregar faltantes a compras', ingredientsTitle: 'Ingredientes',
         preparation: 'Preparación', deleteConfirm: '¿Estás seguro? Esta acción no se puede deshacer.',
         recipeName: 'Nombre de la receta', category: 'Categoría',
@@ -136,32 +124,6 @@ const ingredientPairs = [
     }
 };
 
-// Bilingual ingredient dictionary - simplified
-const bilingualIngredients = {
-    'harina': 'farina', 'farina': 'harina',
-    'azucar': 'sucre', 'sucre': 'azucar', 'azúcar': 'sucre',
-    'leche': 'llet', 'llet': 'leche',
-    'huevo': 'ou', 'ou': 'huevo', 'huevos': 'ous', 'ous': 'huevos',
-    'aceite': 'oli', 'oli': 'aceite',
-    'mantequilla': 'mantega', 'mantega': 'mantequilla',
-    'sal': 'sal', 'agua': 'aigua', 'aigua': 'agua',
-    'pollo': 'pollastre', 'pollastre': 'pollo',
-    'cerdo': 'porc', 'porc': 'cerdo',
-    'jamon': 'pernil', 'pernil': 'jamon', 'jamón': 'pernil',
-    'tomate': 'tomaquet', 'tomaquet': 'tomate', 'tomàquet': 'tomate',
-    'cebolla': 'ceba', 'ceba': 'cebolla',
-    'ajo': 'all', 'all': 'ajo',
-    'patata': 'patata', 'zanahoria': 'pastanaga', 'pastanaga': 'zanahoria',
-    'pimiento': 'pebrot', 'pebrot': 'pimiento',
-    'arroz': 'arros', 'arros': 'arroz', 'arròs': 'arroz',
-    'pan': 'pa', 'pa': 'pan',
-    'queso': 'formatge', 'formatge': 'queso',
-    'manzana': 'poma', 'poma': 'manzana',
-    'naranja': 'taronja', 'taronja': 'naranja',
-    'platano': 'platan', 'platan': 'platano', 'plátano': 'platan', 'plàtan': 'platano',
-    'limon': 'llimona', 'llimona': 'limon', 'limón': 'llimona'
-};
-
 let currentLang = 'es';
 
 const detectLanguage = () => {
@@ -190,26 +152,6 @@ const state = {
     editingRecipe: null,
     currentFilter: 'all',
     searchQuery: ''
-};
-
-const normalizeText = (text) => {
-    return text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
-};
-
-// Check if ingredients match (with bilingual support)
-const ingredientsMatch = (name1, name2) => {
-    const norm1 = normalizeText(name1);
-    const norm2 = normalizeText(name2);
-    
-    if (norm1 === norm2) return true;
-    
-    const equiv1 = bilingualIngredients[norm1];
-    if (equiv1 && normalizeText(equiv1) === norm2) return true;
-    
-    const equiv2 = bilingualIngredients[norm2];
-    if (equiv2 && normalizeText(equiv2) === norm1) return true;
-    
-    return false;
 };
 
 const generateId = () => {
@@ -245,44 +187,6 @@ const init = () => {
         renderView('recipes');
     }, 500);
 };
-
-const createSampleRecipe = () => {
-    const sampleRecipe = currentLang === 'ca' ? {
-        id: generateId(),
-        name: 'Creps Clàssiques',
-        category: 'breakfast',
-        preparationTime: 20,
-        servings: 4,
-        difficulty: 'easy',
-        ingredients: [
-            { id: generateId(), name: 'Farina', quantity: '2 tasses' },
-            { id: generateId(), name: 'Llet', quantity: '1.5 tasses' },
-            { id: generateId(), name: 'Ous', quantity: '2 unitats' },
-            { id: generateId(), name: 'Sucre', quantity: '2 cullerades' }
-        ],
-        steps: [
-            { id: generateId(), description: 'Barreja la farina, sucre i sal en un bol gran', image: null },
-            { id: generateId(), description: 'En un altre bol, bateix els ous amb la llet', image: null },
-            { id: generateId(), description: 'Incorpora els ingredients líquids als secs', image: null },
-            { id: generateId(), description: 'Cuina en una paella calenta fins daurar', image: null }
-        ],
-        image: null,
-        dateCreated: new Date().toISOString()
-    } : {
-        id: generateId(),
-        name: 'Pancakes Clásicos',
-        category: 'breakfast',
-        preparationTime: 20,
-        servings: 4,
-        difficulty: 'easy',
-        ingredients: [
-            { id: generateId(), name: 'Harina', quantity: '2 tazas' },
-            { id: generateId(), name: 'Leche', quantity: '1.5 tazas' },
-            { id: generateId(), name: 'Huevos', quantity: '2 piezas' },
-            { id: generateId(), name: 'Azúcar', quantity: '2 cucharadas' }
-        ],
-        steps: [
-            { id: generateId(), description: 'Mezcla la harina, azúcar y sal en un bowl grande', image: null },
             { id: generateId(), description: 'En otro bowl, bate los huevos con la leche', image: null },
             { id: generateId(), description: 'Incorpora los ingredientes líquidos a los secos', image: null },
             { id: generateId(), description: 'Cocina en sartén caliente hasta dorar', image: null }
