@@ -1,200 +1,172 @@
-// Translations
-const translations = {
-    es: {
-        // Navigation
-        recipes: 'Recetas',
-        pantry: 'Despensa',
-        shopping: 'Compras',
-        
-        // Common
-        add: 'Agregar',
-        edit: 'Editar',
-        delete: 'Eliminar',
-        cancel: 'Cancelar',
-        save: 'Guardar',
-        back: 'Atrás',
-        search: 'Buscar',
-        
-        // Recipes
-        myRecipes: 'Mis Recetas',
-        searchRecipes: 'Buscar recetas...',
-        all: 'Todas',
-        canMake: 'Puedo hacer',
-        almost: 'Casi',
-        noRecipes: 'No hay recetas',
-        tapToAdd: 'Toca el botón + para agregar',
-        newRecipe: 'Nueva Receta',
-        editRecipe: 'Editar Receta',
-        
-        // Recipe detail
-        min: 'min',
-        servings: 'porciones',
-        easy: 'Fácil',
-        medium: 'Media',
-        hard: 'Difícil',
-        haveAll: 'Tienes todos los ingredientes!',
-        missing: 'Te faltan',
-        ingredients: 'ingredientes',
-        addMissing: 'Agregar faltantes a compras',
-        ingredientsTitle: 'Ingredientes',
-        preparation: 'Preparación',
-        deleteConfirm: '¿Estás seguro? Esta acción no se puede deshacer.',
-        
-        // Form
-        recipeName: 'Nombre de la receta',
-        category: 'Categoría',
-        breakfast: 'Desayuno',
-        lunch: 'Comida',
-        dinner: 'Cena',
-        dessert: 'Postre',
-        snack: 'Snack',
-        time: 'Tiempo',
-        difficulty: 'Dificultad',
-        photo: 'Foto',
-        addPhoto: 'Agregar Foto',
-        changePhoto: 'Cambiar Foto',
-        deletePhoto: 'Eliminar Foto',
-        takePhoto: 'Cámara',
-        choosePhoto: 'Galería',
-        
-        // Ingredients
-        addIngredient: 'Agregar Ingrediente',
-        ingredientName: 'Nombre del ingrediente',
-        quantity: 'Cantidad',
-        
-        // Steps
-        steps: 'Pasos',
-        addStep: 'Agregar Paso',
-        stepDescription: 'Describe el paso',
-        
-        // Pantry
-        myPantry: 'Mi Despensa',
-        newIngredient: 'Nuevo ingrediente...',
-        emptyPantry: 'Despensa vacía',
-        addIngredientsPantry: 'Agrega los ingredientes que tienes en casa',
-        available: 'disponibles',
-        
-        // Shopping
-        shoppingList: 'Lista de Compras',
-        newProduct: 'Nuevo producto...',
-        emptyList: 'Lista vacía',
-        toBuy: 'Por Comprar',
-        completed: 'Completados',
-        clear: 'Limpiar',
-        clearCompleted: '¿Eliminar todos los items completados?',
-        
-        // Messages
+// Complete ES-CA Bilingual Dictionary
+const ingredientPairs = [
+    // Básicos y condimentos
+    ['harina', 'farina'], ['azucar', 'sucre'], ['azúcar', 'sucre'], ['sal', 'sal'],
+    ['aceite', 'oli'], ['agua', 'aigua'], ['mantequilla', 'mantega'], ['manteca', 'mantega'],
+    ['pimienta', 'pebre'], ['vinagre', 'vinagre'], ['aceitunas', 'olives'], ['olivas', 'olives'],
+    
+    // Lácteos y huevos
+    ['leche', 'llet'], ['nata', 'nata'], ['crema', 'crema'], ['yogur', 'iogurt'],
+    ['queso', 'formatge'], ['huevo', 'ou'], ['huevos', 'ous'], ['clara', 'clara'],
+    ['yema', 'rovell'], ['mantequilla', 'mantega'],
+    
+    // Carnes
+    ['pollo', 'pollastre'], ['gallina', 'gallina'], ['pavo', 'gall dindi'], ['pato', 'ànec'],
+    ['cerdo', 'porc'], ['ternera', 'vedella'], ['vaca', 'vaca'], ['buey', 'bou'],
+    ['cordero', 'xai'], ['cabrito', 'cabrit'], ['conejo', 'conill'], ['liebre', 'llebre'],
+    ['jamon', 'pernil'], ['jamón', 'pernil'], ['tocino', 'cansalada'], ['bacon', 'bacon'],
+    ['chorizo', 'xoriço'], ['salchicha', 'salsitxa'], ['morcilla', 'botifarra'],
+    
+    // Pescados y mariscos
+    ['pescado', 'peix'], ['salmon', 'salmó'], ['salmón', 'salmó'], ['atun', 'tonyina'],
+    ['atún', 'tonyina'], ['merluza', 'lluç'], ['bacalao', 'bacallà'], ['sardina', 'sardina'],
+    ['anchoa', 'anxova'], ['boquerón', 'seitó'], ['trucha', 'truita'], ['dorada', 'orada'],
+    ['lubina', 'llobarro'], ['rape', 'rap'], ['lenguado', 'llenguado'],
+    ['gamba', 'gamba'], ['langostino', 'llagostí'], ['langosta', 'llagosta'],
+    ['mejillon', 'musclo'], ['mejillón', 'musclo'], ['almeja', 'cloïssa'], ['ostra', 'ostra'],
+    ['calamar', 'calamar'], ['pulpo', 'pop'], ['sepia', 'sípia'], ['marisco', 'marisc'],
+    
+    // Verduras y hortalizas
+    ['tomate', 'tomàquet'], ['tomate', 'tomaquet'], ['cebolla', 'ceba'], ['ajo', 'all'],
+    ['patata', 'patata'], ['papa', 'patata'], ['zanahoria', 'pastanaga'], ['puerro', 'porro'],
+    ['calabacin', 'carabassó'], ['calabacín', 'carabassó'], ['calabaza', 'carbassa'],
+    ['berenjena', 'albergínia'], ['pimiento', 'pebrot'], ['pimentón', 'pebre'],
+    ['chile', 'xili'], ['pepino', 'cogombre'], ['lechuga', 'enciam'], ['escarola', 'escarola'],
+    ['espinaca', 'espinac'], ['acelga', 'bleda'], ['col', 'col'], ['repollo', 'col'],
+    ['coliflor', 'coliflor'], ['brocoli', 'bròquil'], ['brócoli', 'bròquil'],
+    ['alcachofa', 'carxofa'], ['esparrago', 'espàrrec'], ['espárrago', 'espàrrec'],
+    ['judia', 'mongeta'], ['judía', 'mongeta'], ['guisante', 'pèsol'], ['haba', 'fava'],
+    ['garbanzo', 'cigró'], ['lenteja', 'llentia'], ['seta', 'bolet'], ['champiñon', 'xampinyó'],
+    ['champiñón', 'xampinyó'], ['trufa', 'tòfona'], ['maiz', 'blat de moro'], ['maíz', 'blat de moro'],
+    ['remolacha', 'remolatxa'], ['rabano', 'rave'], ['rábano', 'rave'], ['nabo', 'nap'],
+    
+    // Frutas
+    ['manzana', 'poma'], ['pera', 'pera'], ['platano', 'plàtan'], ['plátano', 'plàtan'],
+    ['naranja', 'taronja'], ['mandarina', 'mandarina'], ['limon', 'llimona'], ['limón', 'llimona'],
+    ['lima', 'llima'], ['pomelo', 'aranja'], ['uva', 'raïm'], ['cereza', 'cirera'],
+    ['fresa', 'maduixa'], ['frambuesa', 'gerd'], ['mora', 'móra'], ['arandano', 'nabiu'],
+    ['arándano', 'nabiu'], ['grosella', 'grosella'], ['melocoton', 'préssec'], ['melocotón', 'préssec'],
+    ['albaricoque', 'albercoc'], ['ciruela', 'pruna'], ['sandia', 'síndria'], ['sandía', 'síndria'],
+    ['melon', 'meló'], ['melón', 'meló'], ['kiwi', 'kiwi'], ['mango', 'mango'],
+    ['papaya', 'papaia'], ['piña', 'pinya'], ['coco', 'coco'], ['aguacate', 'alvocat'],
+    ['higo', 'figa'], ['datil', 'dàtil'], ['dátil', 'dàtil'], ['pasa', 'pansa'],
+    ['ciruela pasa', 'pruna seca'], ['orejón', 'orellana'],
+    
+    // Cereales y legumbres
+    ['arroz', 'arròs'], ['arroz', 'arros'], ['trigo', 'blat'], ['avena', 'civada'],
+    ['cebada', 'ordi'], ['centeno', 'sègol'], ['maiz', 'blat de moro'], ['quinoa', 'quinoa'],
+    ['lentejas', 'llenties'], ['garbanzos', 'cigrons'], ['judias', 'mongetes'],
+    ['alubias', 'mongetes'], ['habas', 'faves'], ['soja', 'soia'],
+    
+    // Pan y pasta
+    ['pan', 'pa'], ['barra', 'barra'], ['panecillo', 'panellet'], ['bollo', 'brioix'],
+    ['tostada', 'torrada'], ['pasta', 'pasta'], ['espagueti', 'espagueti'], ['macarron', 'macarró'],
+    ['macarrón', 'macarró'], ['fideo', 'fideu'], ['lasaña', 'lasanya'], ['ravioli', 'ravioli'],
+    ['ñoqui', 'nyoqui'], ['tallarines', 'tallarins'],
+    
+    // Frutos secos
+    ['nuez', 'nou'], ['almendra', 'ametlla'], ['avellana', 'avellana'], ['pistacho', 'pistatxo'],
+    ['castaña', 'castanya'], ['piñon', 'pinyó'], ['piñón', 'pinyó'], ['cacahuete', 'cacauet'],
+    ['anacardo', 'anacardo'], ['pacana', 'pacana'],
+    
+    // Dulces y postres
+    ['azucar', 'sucre'], ['azúcar', 'sucre'], ['miel', 'mel'], ['chocolate', 'xocolata'],
+    ['cacao', 'cacau'], ['vainilla', 'vainilla'], ['canela', 'canyella'], ['tarta', 'pastís'],
+    ['pastel', 'pastís'], ['bizcocho', 'bescuit'], ['galleta', 'galeta'], ['helado', 'gelat'],
+    ['flan', 'flam'], ['natilla', 'natilla'], ['crema', 'crema'], ['nata', 'nata'],
+    ['mermelada', 'melmelada'], ['confitura', 'confitura'], ['dulce de leche', 'dolç de llet'],
+    
+    // Bebidas
+    ['agua', 'aigua'], ['cafe', 'cafè'], ['café', 'cafè'], ['te', 'te'], ['té', 'te'],
+    ['leche', 'llet'], ['zumo', 'suc'], ['jugo', 'suc'], ['refresco', 'refresc'],
+    ['cerveza', 'cervesa'], ['vino', 'vi'], ['cava', 'cava'], ['licor', 'licor'],
+    ['ron', 'rom'], ['whisky', 'whisky'], ['vodka', 'vodka'], ['ginebra', 'ginebra'],
+    
+    // Hierbas y especias
+    ['oregano', 'orenga'], ['orégano', 'orenga'], ['albahaca', 'alfàbrega'], ['tomillo', 'farigola'],
+    ['romero', 'romaní'], ['romero', 'romani'], ['laurel', 'llorer'], ['perejil', 'julivert'],
+    ['cilantro', 'coriandre'], ['menta', 'menta'], ['hierbabuena', 'herba-bona'],
+    ['eneldo', 'anet'], ['estragon', 'estragó'], ['estragón', 'estragó'], ['comino', 'comí'],
+    ['curcuma', 'cúrcuma'], ['cúrcuma', 'cúrcuma'], ['jengibre', 'gingebre'], ['curry', 'curri'],
+        add: 'Agregar', edit: 'Editar', delete: 'Eliminar', cancel: 'Cancelar', save: 'Guardar',
+        myRecipes: 'Mis Recetas', searchRecipes: 'Buscar recetas...', all: 'Todas',
+        canMake: 'Puedo hacer', almost: 'Casi', noRecipes: 'No hay recetas',
+        tapToAdd: 'Toca el botón + para agregar', newRecipe: 'Nueva Receta', editRecipe: 'Editar Receta',
+        min: 'min', servings: 'porciones', easy: 'Fácil', medium: 'Media', hard: 'Difícil',
+        haveAll: 'Tienes todos los ingredientes!', missing: 'Te faltan', ingredients: 'ingredientes',
+        addMissing: 'Agregar faltantes a compras', ingredientsTitle: 'Ingredientes',
+        preparation: 'Preparación', deleteConfirm: '¿Estás seguro? Esta acción no se puede deshacer.',
+        recipeName: 'Nombre de la receta', category: 'Categoría',
+        breakfast: 'Desayuno', lunch: 'Comida', dinner: 'Cena', dessert: 'Postre', snack: 'Snack',
+        time: 'Tiempo', difficulty: 'Dificultad', photo: 'Foto',
+        addPhoto: 'Agregar Foto', changePhoto: 'Cambiar Foto', deletePhoto: 'Eliminar Foto',
+        addIngredient: 'Agregar Ingrediente', ingredientName: 'Nombre del ingrediente', quantity: 'Cantidad',
+        steps: 'Pasos', addStep: 'Agregar Paso', stepDescription: 'Describe el paso',
+        myPantry: 'Mi Despensa', newIngredient: 'Nuevo ingrediente...',
+        emptyPantry: 'Despensa vacía', addIngredientsPantry: 'Agrega los ingredientes que tienes en casa',
+        available: 'disponibles', shoppingList: 'Lista de Compras', newProduct: 'Nuevo producto...',
+        emptyList: 'Lista vacía', toBuy: 'Por Comprar', completed: 'Completados',
+        clear: 'Limpiar', clearCompleted: '¿Eliminar todos los items completados?',
         addedToShopping: 'Se agregaron {count} ingredientes a tu lista de compras',
-        alreadyExists: 'Ya existe en la lista',
-        fillRequired: 'Por favor completa todos los campos requeridos',
-        
-        // Photo messages
-        selectSource: 'Selecciona una fuente',
-        camera: 'Cámara',
-        gallery: 'Galería'
+        alreadyExists: 'Ya existe en la lista', fillRequired: 'Por favor completa todos los campos requeridos'
     },
     ca: {
-        // Navigation
-        recipes: 'Receptes',
-        pantry: 'Rebost',
-        shopping: 'Compres',
-        
-        // Common
-        add: 'Afegir',
-        edit: 'Editar',
-        delete: 'Eliminar',
-        cancel: 'Cancel·lar',
-        save: 'Desar',
-        back: 'Enrere',
-        search: 'Cercar',
-        
-        // Recipes
-        myRecipes: 'Les meves Receptes',
-        searchRecipes: 'Cercar receptes...',
-        all: 'Totes',
-        canMake: 'Puc fer',
-        almost: 'Gairebé',
-        noRecipes: 'No hi ha receptes',
-        tapToAdd: 'Toca el botó + per afegir',
-        newRecipe: 'Nova Recepta',
-        editRecipe: 'Editar Recepta',
-        
-        // Recipe detail
-        min: 'min',
-        servings: 'racions',
-        easy: 'Fàcil',
-        medium: 'Mitjana',
-        hard: 'Difícil',
-        haveAll: 'Tens tots els ingredients!',
-        missing: 'Et falten',
-        ingredients: 'ingredients',
-        addMissing: 'Afegir que falta a compres',
-        ingredientsTitle: 'Ingredients',
-        preparation: 'Preparació',
-        deleteConfirm: 'Estàs segur? Aquesta acció no es pot desfer.',
-        
-        // Form
-        recipeName: 'Nom de la recepta',
-        category: 'Categoria',
-        breakfast: 'Esmorzar',
-        lunch: 'Dinar',
-        dinner: 'Sopar',
-        dessert: 'Postres',
-        snack: 'Berenar',
-        time: 'Temps',
-        difficulty: 'Dificultat',
-        photo: 'Foto',
-        addPhoto: 'Afegir Foto',
-        changePhoto: 'Canviar Foto',
-        deletePhoto: 'Eliminar Foto',
-        takePhoto: 'Càmera',
-        choosePhoto: 'Galeria',
-        
-        // Ingredients
-        addIngredient: 'Afegir Ingredient',
-        ingredientName: 'Nom de l\'ingredient',
-        quantity: 'Quantitat',
-        
-        // Steps
-        steps: 'Passos',
-        addStep: 'Afegir Pas',
-        stepDescription: 'Descriu el pas',
-        
-        // Pantry
-        myPantry: 'El meu Rebost',
-        newIngredient: 'Nou ingredient...',
-        emptyPantry: 'Rebost buit',
-        addIngredientsPantry: 'Afegeix els ingredients que tens a casa',
-        available: 'disponibles',
-        
-        // Shopping
-        shoppingList: 'Llista de Compres',
-        newProduct: 'Nou producte...',
-        emptyList: 'Llista buida',
-        toBuy: 'Per Comprar',
-        completed: 'Completats',
-        clear: 'Netejar',
-        clearCompleted: 'Eliminar tots els items completats?',
-        
-        // Messages
+        recipes: 'Receptes', pantry: 'Rebost', shopping: 'Compres',
+        add: 'Afegir', edit: 'Editar', delete: 'Eliminar', cancel: 'Cancel·lar', save: 'Desar',
+        myRecipes: 'Les meves Receptes', searchRecipes: 'Cercar receptes...', all: 'Totes',
+        canMake: 'Puc fer', almost: 'Gairebé', noRecipes: 'No hi ha receptes',
+        tapToAdd: 'Toca el botó + per afegir', newRecipe: 'Nova Recepta', editRecipe: 'Editar Recepta',
+        min: 'min', servings: 'racions', easy: 'Fàcil', medium: 'Mitjana', hard: 'Difícil',
+        haveAll: 'Tens tots els ingredients!', missing: 'Et falten', ingredients: 'ingredients',
+        addMissing: 'Afegir que falta a compres', ingredientsTitle: 'Ingredients',
+        preparation: 'Preparació', deleteConfirm: 'Estàs segur? Aquesta acció no es pot desfer.',
+        recipeName: 'Nom de la recepta', category: 'Categoria',
+        breakfast: 'Esmorzar', lunch: 'Dinar', dinner: 'Sopar', dessert: 'Postres', snack: 'Berenar',
+        time: 'Temps', difficulty: 'Dificultat', photo: 'Foto',
+        addPhoto: 'Afegir Foto', changePhoto: 'Canviar Foto', deletePhoto: 'Eliminar Foto',
+        addIngredient: 'Afegir Ingredient', ingredientName: 'Nom de l\'ingredient', quantity: 'Quantitat',
+        steps: 'Passos', addStep: 'Afegir Pas', stepDescription: 'Descriu el pas',
+        myPantry: 'El meu Rebost', newIngredient: 'Nou ingredient...',
+        emptyPantry: 'Rebost buit', addIngredientsPantry: 'Afegeix els ingredients que tens a casa',
+        available: 'disponibles', shoppingList: 'Llista de Compres', newProduct: 'Nou producte...',
+        emptyList: 'Llista buida', toBuy: 'Per Comprar', completed: 'Completats',
+        clear: 'Netejar', clearCompleted: 'Eliminar tots els items completats?',
         addedToShopping: 'S\'han afegit {count} ingredients a la teva llista de compres',
-        alreadyExists: 'Ja existeix a la llista',
-        fillRequired: 'Si us plau completa tots els camps requerits',
-        
-        // Photo messages
-        selectSource: 'Selecciona una font',
-        camera: 'Càmera',
-        gallery: 'Galeria'
+        alreadyExists: 'Ja existeix a la llista', fillRequired: 'Si us plau completa tots els camps requerits'
     }
 };
 
-// Language management
+// Bilingual ingredient dictionary - simplified
+const bilingualIngredients = {
+    'harina': 'farina', 'farina': 'harina',
+    'azucar': 'sucre', 'sucre': 'azucar', 'azúcar': 'sucre',
+    'leche': 'llet', 'llet': 'leche',
+    'huevo': 'ou', 'ou': 'huevo', 'huevos': 'ous', 'ous': 'huevos',
+    'aceite': 'oli', 'oli': 'aceite',
+    'mantequilla': 'mantega', 'mantega': 'mantequilla',
+    'sal': 'sal', 'agua': 'aigua', 'aigua': 'agua',
+    'pollo': 'pollastre', 'pollastre': 'pollo',
+    'cerdo': 'porc', 'porc': 'cerdo',
+    'jamon': 'pernil', 'pernil': 'jamon', 'jamón': 'pernil',
+    'tomate': 'tomaquet', 'tomaquet': 'tomate', 'tomàquet': 'tomate',
+    'cebolla': 'ceba', 'ceba': 'cebolla',
+    'ajo': 'all', 'all': 'ajo',
+    'patata': 'patata', 'zanahoria': 'pastanaga', 'pastanaga': 'zanahoria',
+    'pimiento': 'pebrot', 'pebrot': 'pimiento',
+    'arroz': 'arros', 'arros': 'arroz', 'arròs': 'arroz',
+    'pan': 'pa', 'pa': 'pan',
+    'queso': 'formatge', 'formatge': 'queso',
+    'manzana': 'poma', 'poma': 'manzana',
+    'naranja': 'taronja', 'taronja': 'naranja',
+    'platano': 'platan', 'platan': 'platano', 'plátano': 'platan', 'plàtan': 'platano',
+    'limon': 'llimona', 'llimona': 'limon', 'limón': 'llimona'
+};
+
 let currentLang = 'es';
 
 const detectLanguage = () => {
     const saved = localStorage.getItem('appLanguage');
     if (saved) return saved;
-    
     const browserLang = navigator.language || navigator.userLanguage;
     return browserLang.startsWith('ca') ? 'ca' : 'es';
 };
@@ -209,7 +181,6 @@ const t = (key) => {
     return translations[currentLang][key] || translations.es[key] || key;
 };
 
-// App State
 const state = {
     currentView: 'recipes',
     recipes: [],
@@ -221,122 +192,22 @@ const state = {
     searchQuery: ''
 };
 
-// Bilingual ingredient dictionary ES <-> CA
-const ingredientDictionary = {
-    // Básicos
-    'harina': ['farina', 'harina'],
-    'azucar': ['sucre', 'azucar', 'azúcar'],
-    'sal': ['sal'],
-    'aceite': ['oli', 'aceite'],
-    'agua': ['aigua', 'agua'],
-    'leche': ['llet', 'leche'],
-    'mantequilla': ['mantega', 'mantequilla'],
-    'huevo': ['ou', 'huevo'],
-    'huevos': ['ous', 'huevos'],
-    
-    // Lácteos
-    'queso': ['formatge', 'queso'],
-    'nata': ['nata', 'crema'],
-    'yogur': ['iogurt', 'yogur'],
-    
-    // Carnes
-    'pollo': ['pollastre', 'pollo'],
-    'cerdo': ['porc', 'cerdo'],
-    'ternera': ['vedella', 'ternera'],
-    'cordero': ['xai', 'cordero'],
-    'jamon': ['pernil', 'jamón', 'jamon'],
-    
-    // Pescados
-    'pescado': ['peix', 'pescado'],
-    'salmon': ['salmó', 'salmó', 'salmon', 'salmón'],
-    'atun': ['tonyina', 'atún', 'atun'],
-    'merluza': ['lluç', 'merluza'],
-    
-    // Verduras
-    'tomate': ['tomàquet', 'tomaquet', 'tomate'],
-    'cebolla': ['ceba', 'cebolla'],
-    'ajo': ['all', 'ajo'],
-    'patata': ['patata', 'creïlla'],
-    'zanahoria': ['pastanaga', 'zanahoria'],
-    'pimiento': ['pebrot', 'pimiento'],
-    'lechuga': ['enciam', 'lechuga'],
-    'espinaca': ['espinac', 'espinaca'],
-    'calabacin': ['carabassó', 'calabacín', 'calabacin'],
-    'berenjena': ['albergínia', 'alberginia', 'berenjena'],
-    
-    // Frutas
-    'manzana': ['poma', 'manzana'],
-    'naranja': ['taronja', 'naranja'],
-    'platano': ['plàtan', 'platan', 'plátano', 'platano'],
-    'fresa': ['maduixa', 'fresa'],
-    'limon': ['llimona', 'limón', 'limon'],
-    'pera': ['pera'],
-    'melocoton': ['préssec', 'pressec', 'melocotón', 'melocoton'],
-    
-    // Legumbres
-    'lentejas': ['llenties', 'lentejas'],
-    'garbanzos': ['cigrons', 'garbanzos'],
-    'judias': ['mongetes', 'judías', 'judias'],
-    
-    // Cereales
-    'arroz': ['arròs', 'arros', 'arroz'],
-    'pasta': ['pasta'],
-    'pan': ['pa', 'pan'],
-    
-    // Especias
-    'pimienta': ['pebre', 'pimienta'],
-    'oregano': ['orenga', 'orégano', 'oregano'],
-    'perejil': ['julivert', 'perejil'],
-    'tomillo': ['farigola', 'tomillo'],
-    'romero': ['romaní', 'romani', 'romero'],
-    
-    // Otros
-    'chocolate': ['xocolata', 'chocolate'],
-    'cafe': ['cafè', 'cafe', 'café'],
-    'te': ['te', 'té'],
-    'vino': ['vi', 'vino'],
-    'cerveza': ['cervesa', 'cerveza']
-};
-
-// Create reverse lookup for faster matching
-const createIngredientLookup = () => {
-    const lookup = {};
-    for (const [key, values] of Object.entries(ingredientDictionary)) {
-        values.forEach(value => {
-            const normalized = normalizeText(value);
-            if (!lookup[normalized]) {
-                lookup[normalized] = new Set();
-            }
-            values.forEach(v => lookup[normalized].add(normalizeText(v)));
-        });
-    }
-    return lookup;
-};
-
-const ingredientLookup = createIngredientLookup();
-
-// Utility Functions
 const normalizeText = (text) => {
-    return text.toLowerCase()
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '')
-        .trim();
+    return text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
 };
 
-// Check if two ingredient names match (considering bilingual equivalents)
+// Check if ingredients match (with bilingual support)
 const ingredientsMatch = (name1, name2) => {
     const norm1 = normalizeText(name1);
     const norm2 = normalizeText(name2);
     
-    // Direct match
     if (norm1 === norm2) return true;
     
-    // Check if they're bilingual equivalents
-    const equivalents1 = ingredientLookup[norm1];
-    if (equivalents1 && equivalents1.has(norm2)) return true;
+    const equiv1 = bilingualIngredients[norm1];
+    if (equiv1 && normalizeText(equiv1) === norm2) return true;
     
-    const equivalents2 = ingredientLookup[norm2];
-    if (equivalents2 && equivalents2.has(norm1)) return true;
+    const equiv2 = bilingualIngredients[norm2];
+    if (equiv2 && normalizeText(equiv2) === norm1) return true;
     
     return false;
 };
@@ -345,7 +216,6 @@ const generateId = () => {
     return Date.now().toString(36) + Math.random().toString(36).substr(2);
 };
 
-// Storage Functions
 const Storage = {
     save: (key, data) => {
         localStorage.setItem(key, JSON.stringify(data));
@@ -356,25 +226,19 @@ const Storage = {
     }
 };
 
-// Initialize App
 const init = () => {
-    // Detect and set language
     setLanguage(detectLanguage());
     
-    // Load data from localStorage
     state.recipes = Storage.load('recipes') || [];
     state.pantry = Storage.load('pantry') || [];
     state.shopping = Storage.load('shopping') || [];
 
-    // Create sample recipe if empty
     if (state.recipes.length === 0) {
         createSampleRecipe();
     }
 
-    // Setup event listeners
     setupEventListeners();
 
-    // Hide loading, show app
     setTimeout(() => {
         document.getElementById('loading').style.display = 'none';
         document.getElementById('main-app').style.display = 'flex';
@@ -431,9 +295,7 @@ const createSampleRecipe = () => {
     Storage.save('recipes', state.recipes);
 };
 
-// Event Listeners
 const setupEventListeners = () => {
-    // Navigation
     document.querySelectorAll('.nav-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             const view = btn.dataset.view;
@@ -441,10 +303,8 @@ const setupEventListeners = () => {
         });
     });
 
-    // Add button
     document.getElementById('add-btn').addEventListener('click', handleAddButton);
 
-    // Back button
     document.getElementById('back-btn').addEventListener('click', () => {
         if (state.editingRecipe !== null) {
             state.editingRecipe = null;
@@ -466,12 +326,10 @@ const handleAddButton = () => {
     }
 };
 
-// Language Toggle
 const toggleLanguage = () => {
     const newLang = currentLang === 'es' ? 'ca' : 'es';
     setLanguage(newLang);
     
-    // Re-render current view
     if (state.editingRecipe !== null) {
         showAddRecipeForm(state.editingRecipe);
     } else if (state.currentRecipe) {
@@ -481,18 +339,15 @@ const toggleLanguage = () => {
     }
 };
 
-// View Rendering
 const renderView = (viewName) => {
     state.currentView = viewName;
     state.currentRecipe = null;
     state.editingRecipe = null;
 
-    // Update navigation
     document.querySelectorAll('.nav-btn').forEach(btn => {
         btn.classList.toggle('active', btn.dataset.view === viewName);
     });
 
-    // Update header
     const headerTitle = document.getElementById('header-title');
     const backBtn = document.getElementById('back-btn');
     const addBtn = document.getElementById('add-btn');
@@ -507,7 +362,6 @@ const renderView = (viewName) => {
     backBtn.style.display = 'none';
     addBtn.style.display = viewName === 'recipes' ? 'block' : 'none';
 
-    // Render content
     const content = document.getElementById('content');
     switch (viewName) {
         case 'recipes':
@@ -522,7 +376,6 @@ const renderView = (viewName) => {
     }
 };
 
-// Recipes View
 const renderRecipesView = (container) => {
     const html = `
         <div class="search-bar">
@@ -543,13 +396,11 @@ const renderRecipesView = (container) => {
     `;
     container.innerHTML = html;
 
-    // Setup search
     document.getElementById('recipe-search').addEventListener('input', (e) => {
         state.searchQuery = e.target.value;
         renderRecipeList();
     });
 
-    // Setup filters
     document.querySelectorAll('.filter-chips .chip').forEach(chip => {
         chip.addEventListener('click', () => {
             state.currentFilter = chip.dataset.filter;
@@ -564,7 +415,6 @@ const renderRecipeList = () => {
     const container = document.getElementById('recipes-container');
     let recipes = [...state.recipes];
 
-    // Apply search
     if (state.searchQuery) {
         const normalized = normalizeText(state.searchQuery);
         recipes = recipes.filter(r => 
@@ -573,7 +423,6 @@ const renderRecipeList = () => {
         );
     }
 
-    // Apply filter
     if (state.currentFilter === 'canMake') {
         recipes = recipes.filter(r => calculateMatch(r) === 100);
     } else if (state.currentFilter === 'almost') {
@@ -583,7 +432,6 @@ const renderRecipeList = () => {
         });
     }
 
-    // Sort by match percentage
     recipes.sort((a, b) => calculateMatch(b) - calculateMatch(a));
 
     if (recipes.length === 0) {
@@ -602,7 +450,6 @@ const renderRecipeList = () => {
 
     container.innerHTML = recipes.map(recipe => createRecipeCard(recipe)).join('');
 
-    // Add click listeners
     container.querySelectorAll('.recipe-card').forEach((card, index) => {
         card.addEventListener('click', () => {
             showRecipeDetail(recipes[index]);
@@ -664,7 +511,6 @@ const countPhotos = (recipe) => {
     return count;
 };
 
-// Recipe Detail View
 const showRecipeDetail = (recipe) => {
     state.currentRecipe = recipe;
     const match = calculateMatch(recipe);
@@ -770,7 +616,7 @@ const getMissingIngredients = (recipe) => {
 window.addMissingToShopping = () => {
     const missing = getMissingIngredients(state.currentRecipe);
     missing.forEach(ing => {
-        if (!state.shopping.some(s => normalizeText(s.name) === normalizeText(ing.name))) {
+        if (!state.shopping.some(s => ingredientsMatch(s.name, ing.name))) {
             state.shopping.push({
                 id: generateId(),
                 name: ing.name,
@@ -813,7 +659,7 @@ const getDifficultyColor = (difficulty) => {
     return difficulty === 'easy' ? 'success' : difficulty === 'medium' ? 'warning' : 'danger';
 };
 
-// Add/Edit Recipe Form
+// Form handling (simplified - continued in next comment due to character limit)
 const showAddRecipeForm = (recipeToEdit = null) => {
     state.editingRecipe = recipeToEdit;
     const isEditing = recipeToEdit !== null;
@@ -829,7 +675,6 @@ const showAddRecipeForm = (recipeToEdit = null) => {
     document.getElementById('back-btn').style.display = 'block';
     document.getElementById('add-btn').style.display = 'none';
 
-    // Initialize form data
     const formData = {
         name: recipeToEdit?.name || '',
         category: recipeToEdit?.category || 'lunch',
@@ -849,7 +694,6 @@ const renderRecipeForm = (formData, isEditing) => {
     
     content.innerHTML = `
         <div style="padding: 16px; padding-bottom: 100px;">
-            <!-- Main Photo -->
             <div style="margin-bottom: 24px;">
                 <label class="form-label">${t('photo')}</label>
                 ${formData.image ? `
@@ -871,13 +715,11 @@ const renderRecipeForm = (formData, isEditing) => {
                 </div>
             </div>
 
-            <!-- Name -->
             <div class="form-group">
                 <label class="form-label">${t('recipeName')}</label>
                 <input type="text" class="form-input" id="recipe-name" value="${formData.name}" placeholder="${t('recipeName')}">
             </div>
 
-            <!-- Category -->
             <div class="form-group">
                 <label class="form-label">${t('category')}</label>
                 <select class="form-input" id="recipe-category">
@@ -889,7 +731,6 @@ const renderRecipeForm = (formData, isEditing) => {
                 </select>
             </div>
 
-            <!-- Time and Servings -->
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
                 <div class="form-group">
                     <label class="form-label">${t('time')} (${t('min')})</label>
@@ -901,7 +742,6 @@ const renderRecipeForm = (formData, isEditing) => {
                 </div>
             </div>
 
-            <!-- Difficulty -->
             <div class="form-group">
                 <label class="form-label">${t('difficulty')}</label>
                 <div style="display: flex; gap: 8px;">
@@ -917,7 +757,6 @@ const renderRecipeForm = (formData, isEditing) => {
                 </div>
             </div>
 
-            <!-- Ingredients -->
             <div class="form-group">
                 <label class="form-label">${t('ingredientsTitle')}</label>
                 <div id="ingredients-list" style="margin-bottom: 12px;">
@@ -940,7 +779,6 @@ const renderRecipeForm = (formData, isEditing) => {
                 </button>
             </div>
 
-            <!-- Steps -->
             <div class="form-group">
                 <label class="form-label">${t('steps')}</label>
                 <div id="steps-list" style="margin-bottom: 12px;">
@@ -970,7 +808,6 @@ const renderRecipeForm = (formData, isEditing) => {
                 </button>
             </div>
 
-            <!-- Save Button -->
             <div style="position: fixed; bottom: calc(var(--nav-height) + 16px); left: 16px; right: 16px; z-index: 50;">
                 <button class="btn btn-primary" style="width: 100%; box-shadow: 0 4px 12px rgba(0,0,0,0.15);" onclick="saveRecipeForm()">
                     💾 ${t('save')}
@@ -981,11 +818,9 @@ const renderRecipeForm = (formData, isEditing) => {
         <input type="file" id="photo-input" accept="image/*" capture="environment" style="display: none;">
     `;
 
-    // Setup photo input handler
     document.getElementById('photo-input').addEventListener('change', handlePhotoSelect);
 };
 
-// Form State
 let currentFormData = null;
 let currentPhotoTarget = null;
 
@@ -1110,14 +945,12 @@ const handlePhotoSelect = (event) => {
     };
     reader.readAsDataURL(file);
     
-    // Reset input
     event.target.value = '';
 };
 
 window.saveRecipeForm = () => {
     const formData = updateFormData();
     
-    // Validation
     if (!formData.name.trim()) {
         alert(t('fillRequired'));
         return;
@@ -1133,9 +966,7 @@ window.saveRecipeForm = () => {
         return;
     }
     
-    // Save or update recipe
     if (state.editingRecipe) {
-        // Update existing recipe
         const index = state.recipes.findIndex(r => r.id === state.editingRecipe.id);
         if (index !== -1) {
             state.recipes[index] = {
@@ -1145,7 +976,6 @@ window.saveRecipeForm = () => {
             };
         }
     } else {
-        // Create new recipe
         state.recipes.push({
             ...formData,
             id: generateId(),
@@ -1155,16 +985,13 @@ window.saveRecipeForm = () => {
     
     Storage.save('recipes', state.recipes);
     
-    // Reset form state
     currentFormData = null;
     currentPhotoTarget = null;
     state.editingRecipe = null;
     
-    // Go back to recipes view
     renderView('recipes');
 };
 
-// Pantry View
 const renderPantryView = (container) => {
     const html = `
         <div class="input-add-bar">
@@ -1245,7 +1072,6 @@ window.deleteFromPantry = (id) => {
     renderPantryList();
 };
 
-// Shopping View
 const renderShoppingView = (container) => {
     const html = `
         <div class="input-add-bar">
@@ -1329,7 +1155,7 @@ window.addToShopping = () => {
     
     if (!name) return;
     
-    if (state.shopping.some(s => normalizeText(s.name) === normalizeText(name))) {
+    if (state.shopping.some(s => ingredientsMatch(s.name, name))) {
         alert(t('alreadyExists'));
         return;
     }
@@ -1369,21 +1195,16 @@ window.clearCompleted = () => {
     }
 };
 
-// Make toggleLanguage globally accessible
 window.toggleLanguage = toggleLanguage;
 
-// Initialize when DOM is ready
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
 } else {
     init();
 }
 
-// Register Service Worker for offline support
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-        navigator.serviceWorker.register('sw.js').catch(() => {
-            // Service worker registration failed, app still works
-        });
+        navigator.serviceWorker.register('sw.js').catch(() => {});
     });
 }
