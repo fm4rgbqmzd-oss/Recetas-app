@@ -81,6 +81,73 @@ const getDeviceId = () => {
 
 const DEVICE_ID = getDeviceId();
 
+// Data adapters
+const Adapters = {
+    recipeToSQL(recipe) {
+        return {
+            id: recipe.id,
+            name: recipe.name,
+            category: recipe.category,
+            preparation_time: recipe.preparationTime,
+            servings: recipe.servings,
+            difficulty: recipe.difficulty,
+            ingredients: recipe.ingredients,
+            steps: recipe.steps,
+            image: recipe.image,
+            date_created: recipe.dateCreated
+        };
+    },
+    
+    recipeFromSQL(data) {
+        return {
+            id: data.id,
+            name: data.name,
+            category: data.category,
+            preparationTime: data.preparation_time,
+            servings: data.servings,
+            difficulty: data.difficulty,
+            ingredients: data.ingredients,
+            steps: data.steps,
+            image: data.image,
+            dateCreated: data.date_created
+        };
+    },
+    
+    pantryToSQL(item) {
+        return {
+            id: item.id,
+            name: item.name,
+            date_added: item.dateAdded
+        };
+    },
+    
+    pantryFromSQL(data) {
+        return {
+            id: data.id,
+            name: data.name,
+            dateAdded: data.date_added
+        };
+    },
+    
+    shoppingToSQL(item) {
+        return {
+            id: item.id,
+            name: item.name,
+            completed: item.completed,
+            date_added: item.dateAdded
+        };
+    },
+    
+    shoppingFromSQL(data) {
+        return {
+            id: data.id,
+            name: data.name,
+            completed: data.completed,
+            dateAdded: data.date_added
+        };
+    }
+};
+
 // Sync Manager
 const SyncManager = {
     syncInProgress: false,
@@ -98,6 +165,7 @@ const SyncManager = {
             await this.syncNotes();
             this.lastSync = new Date().toISOString();
             localStorage.setItem('lastSync', this.lastSync);
+            console.log('✓ Sync completed');
         } catch (error) {
             console.error('Sync error:', error);
         } finally {
@@ -108,11 +176,12 @@ const SyncManager = {
     async syncRecipes() {
         // Upload local recipes
         for (const recipe of state.recipes) {
+            const sqlRecipe = Adapters.recipeToSQL(recipe);
             const existing = await supabase.select('recipes', `id=eq.${recipe.id}`);
             if (existing.length === 0) {
-                await supabase.insert('recipes', { ...recipe, device_id: DEVICE_ID });
+                await supabase.insert('recipes', { ...sqlRecipe, device_id: DEVICE_ID });
             } else {
-                await supabase.update('recipes', recipe.id, { ...recipe, device_id: DEVICE_ID });
+                await supabase.update('recipes', recipe.id, { ...sqlRecipe, device_id: DEVICE_ID });
             }
         }
 
@@ -122,7 +191,7 @@ const SyncManager = {
             const localIds = new Set(state.recipes.map(r => r.id));
             remoteRecipes.forEach(remote => {
                 if (!localIds.has(remote.id)) {
-                    state.recipes.push(remote);
+                    state.recipes.push(Adapters.recipeFromSQL(remote));
                 }
             });
             Storage.save('recipes', state.recipes);
@@ -130,40 +199,45 @@ const SyncManager = {
     },
 
     async syncPantry() {
-        // Clear and re-sync pantry
+        // Upload local items
+        for (const item of state.pantry) {
+            const sqlItem = Adapters.pantryToSQL(item);
+            const existing = await supabase.select('pantry', `id=eq.${item.id}`);
+            if (existing.length === 0) {
+                await supabase.insert('pantry', { ...sqlItem, device_id: DEVICE_ID });
+            }
+        }
+        
+        // Download remote items
         const remotePantry = await supabase.select('pantry');
         if (remotePantry) {
-            // Upload local items not in remote
-            for (const item of state.pantry) {
-                const exists = remotePantry.find(r => r.id === item.id);
-                if (!exists) {
-                    await supabase.insert('pantry', { ...item, device_id: DEVICE_ID });
-                }
-            }
-            
-            // Update local with remote
-            state.pantry = remotePantry;
+            state.pantry = remotePantry.map(Adapters.pantryFromSQL);
             Storage.save('pantry', state.pantry);
         }
     },
 
     async syncShopping() {
+        // Upload local items
+        for (const item of state.shopping) {
+            const sqlItem = Adapters.shoppingToSQL(item);
+            const existing = await supabase.select('shopping', `id=eq.${item.id}`);
+            if (existing.length === 0) {
+                await supabase.insert('shopping', { ...sqlItem, device_id: DEVICE_ID });
+            } else {
+                await supabase.update('shopping', item.id, { ...sqlItem, device_id: DEVICE_ID });
+            }
+        }
+        
+        // Download remote items
         const remoteShopping = await supabase.select('shopping');
         if (remoteShopping) {
-            for (const item of state.shopping) {
-                const exists = remoteShopping.find(r => r.id === item.id);
-                if (!exists) {
-                    await supabase.insert('shopping', { ...item, device_id: DEVICE_ID });
-                } else if (exists.completed !== item.completed) {
-                    await supabase.update('shopping', item.id, item);
-                }
-            }
-            state.shopping = remoteShopping;
+            state.shopping = remoteShopping.map(Adapters.shoppingFromSQL);
             Storage.save('shopping', state.shopping);
         }
     },
 
     async syncMealPlan() {
+        // Try to get existing meal plan
         const remotePlan = await supabase.select('meal_plan');
         if (remotePlan && remotePlan.length > 0) {
             const planData = remotePlan[0].data || {};
@@ -181,12 +255,14 @@ const SyncManager = {
     },
 
     async syncNotes() {
+        // Try to get existing notes
         const remoteNotes = await supabase.select('recipe_notes');
         if (remoteNotes && remoteNotes.length > 0) {
             const notesData = remoteNotes[0].data || {};
             state.recipeNotes = { ...state.recipeNotes, ...notesData };
         }
         
+        // Upload current notes
         const existing = await supabase.select('recipe_notes', `device_id=eq.${DEVICE_ID}`);
         if (existing.length === 0) {
             await supabase.insert('recipe_notes', { device_id: DEVICE_ID, data: state.recipeNotes });
