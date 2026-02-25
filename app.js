@@ -133,6 +133,8 @@ const state = {
     recipes: [],
     pantry: [],
     shopping: [],
+    mealPlan: {}, // { 'monday': recipeId, 'tuesday': recipeId, ... }
+    recipeNotes: {}, // { recipeId: 'my personal notes' }
     currentRecipe: null,
     editingRecipe: null,
     currentFilter: 'all',
@@ -179,6 +181,8 @@ const init = () => {
     state.recipes = Storage.load('recipes') || [];
     state.pantry = Storage.load('pantry') || [];
     state.shopping = Storage.load('shopping') || [];
+    state.mealPlan = Storage.load('mealPlan') || {};
+    state.recipeNotes = Storage.load('recipeNotes') || {};
 
     if (state.recipes.length === 0) {
         createSampleRecipe();
@@ -417,17 +421,26 @@ const createRecipeCard = (recipe) => {
 
     return `
         <div class="recipe-card" data-id="${recipe.id}">
-            ${recipe.image ? 
-                `<img src="${recipe.image}" alt="${recipe.name}" class="recipe-image">` :
-                `<div class="recipe-icon">${categoryIcons[recipe.category]}</div>`
-            }
-            <div class="recipe-info">
-                <div class="recipe-title">${recipe.name}</div>
-                <div class="recipe-meta">
-                    <span>⏱️ ${recipe.preparationTime} ${t('min')}</span>
-                    <span>👥 ${recipe.servings} ${t('servings')}</span>
+            <div class="recipe-card-image-container">
+                ${recipe.image ? 
+                    `<img src="${recipe.image}" alt="${recipe.name}" class="recipe-image-hero">` :
+                    `<div class="recipe-icon-hero">${categoryIcons[recipe.category]}</div>`
+                }
+                <div class="recipe-card-overlay"></div>
+            </div>
+            <div class="recipe-card-content">
+                <div class="recipe-title-hero">${recipe.name}</div>
+                <div class="recipe-meta-row">
+                    <div class="recipe-meta-item">
+                        <span>⏱️</span>
+                        <span>${recipe.preparationTime} ${t('min')}</span>
+                    </div>
+                    <div class="recipe-meta-item">
+                        <span>👥</span>
+                        <span>${recipe.servings} ${t('servings')}</span>
+                    </div>
                 </div>
-                <div class="recipe-badges">
+                <div class="recipe-badges-row">
                     <span class="badge ${matchColor}">
                         ${match === 100 ? '✓' : ''} ${Math.round(match)}%
                     </span>
