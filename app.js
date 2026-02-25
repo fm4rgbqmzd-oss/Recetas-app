@@ -318,6 +318,9 @@ const renderView = (viewName) => {
         case 'recipes':
             renderRecipesView(content);
             break;
+        case 'planner':
+            renderPlannerView(content);
+            break;
         case 'pantry':
             renderPantryView(content);
             break;
@@ -447,6 +450,9 @@ const createRecipeCard = (recipe) => {
                     ${recipe.image || recipe.steps.some(s => s.image) ? 
                         `<span class="badge info">📷 ${countPhotos(recipe)}</span>` : ''
                     }
+                    ${state.recipeNotes[recipe.id] ? 
+                        `<span class="badge info">📝 Notas</span>` : ''
+                    }
                 </div>
             </div>
         </div>
@@ -541,7 +547,7 @@ const showRecipeDetail = (recipe) => {
                 ${recipe.steps.map((step, index) => `
                     <div style="margin-bottom: 20px;">
                         <div style="display: flex; gap: 12px; margin-bottom: 12px;">
-                            <div style="width: 28px; height: 28px; background: var(--primary-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; flex-shrink: 0;">
+                            <div style="width: 28px; height: 28px; background: var(--accent-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--bg-primary); font-weight: 600; flex-shrink: 0;">
                                 ${index + 1}
                             </div>
                             <div style="flex: 1; padding-top: 4px;">${step.description}</div>
@@ -551,6 +557,25 @@ const showRecipeDetail = (recipe) => {
                         ` : ''}
                     </div>
                 `).join('')}
+
+                <div style="background: var(--bg-elevated); border-radius: 16px; padding: 20px; margin: 24px 0; border: 2px solid var(--border-color);">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                        <h3 style="font-size: 18px; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 8px;">
+                            📝 Mis Notas
+                        </h3>
+                    </div>
+                    <textarea 
+                        id="recipe-notes-${recipe.id}" 
+                        placeholder="Añade tus tips personales, modificaciones, o cualquier nota..."
+                        style="width: 100%; min-height: 100px; padding: 16px; border: 2px solid var(--border-color); border-radius: 12px; background: var(--bg-card); color: var(--text-primary); font-size: 15px; font-family: inherit; resize: vertical;"
+                        onchange="saveRecipeNotes('${recipe.id}')"
+                    >${state.recipeNotes[recipe.id] || ''}</textarea>
+                    ${state.recipeNotes[recipe.id] ? `
+                        <div style="margin-top: 8px; font-size: 13px; color: var(--text-secondary);">
+                            ✓ Guardado automáticamente
+                        </div>
+                    ` : ''}
+                </div>
 
                 <div style="margin-top: 32px; display: flex; gap: 12px;">
                     <button class="btn btn-outline" style="flex: 1;" onclick="editRecipe('${recipe.id}')">
@@ -1168,3 +1193,132 @@ if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('sw.js').catch(() => {});
     });
 }
+
+window.saveRecipeNotes = (recipeId) => {
+    const textarea = document.getElementById(`recipe-notes-${recipeId}`);
+    if (textarea) {
+        state.recipeNotes[recipeId] = textarea.value.trim();
+        Storage.save('recipeNotes', state.recipeNotes);
+    }
+};
+
+// Meal Planner View
+const renderPlannerView = (container) => {
+    const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+    const dayNames = {
+        es: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'],
+        ca: ['Dilluns', 'Dimarts', 'Dimecres', 'Dijous', 'Divendres', 'Dissabte', 'Diumenge']
+    };
+    
+    const html = `
+        <div style="padding: 20px 16px;">
+            <div style="margin-bottom: 24px;">
+                <h2 style="font-size: 24px; font-weight: 700; color: var(--text-primary); margin-bottom: 8px;">
+                    ${currentLang === 'es' ? '📅 Planificador Semanal' : '📅 Planificador Setmanal'}
+                </h2>
+                <p style="color: var(--text-secondary); font-size: 15px;">
+                    ${currentLang === 'es' ? 'Organiza tus comidas para la semana' : 'Organitza els teus àpats per la setmana'}
+                </p>
+            </div>
+            
+            <div style="display: flex; flex-direction: column; gap: 16px;">
+                ${days.map((day, index) => {
+                    const recipe = state.mealPlan[day] ? state.recipes.find(r => r.id === state.mealPlan[day]) : null;
+                    return `
+                        <div style="background: var(--bg-card); border-radius: 16px; border: 2px solid var(--border-color); padding: 16px; transition: all 0.3s;">
+                            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                                <div style="font-size: 16px; font-weight: 700; color: var(--text-primary);">
+                                    ${dayNames[currentLang][index]}
+                                </div>
+                                ${recipe ? `
+                                    <button onclick="clearDay('${day}')" style="background: none; border: none; color: var(--danger); padding: 8px; cursor: pointer; border-radius: 8px; transition: all 0.2s;">
+                                        ✕
+                                    </button>
+                                ` : ''}
+                            </div>
+                            ${recipe ? `
+                                <div onclick="showRecipeDetail(state.recipes.find(r => r.id === '${recipe.id}'))" style="display: flex; gap: 12px; align-items: center; cursor: pointer; background: var(--bg-elevated); padding: 12px; border-radius: 12px;">
+                                    ${recipe.image ? `
+                                        <img src="${recipe.image}" style="width: 60px; height: 60px; border-radius: 10px; object-fit: cover;">
+                                    ` : `
+                                        <div style="width: 60px; height: 60px; border-radius: 10px; background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-bronze) 100%); display: flex; align-items: center; justify-content: center; font-size: 28px;">
+                                            ${getCategoryIcon(recipe.category)}
+                                        </div>
+                                    `}
+                                    <div style="flex: 1;">
+                                        <div style="font-weight: 600; color: var(--text-primary); font-size: 15px;">${recipe.name}</div>
+                                        <div style="color: var(--text-secondary); font-size: 13px; margin-top: 4px;">
+                                            ⏱️ ${recipe.preparationTime} min • 👥 ${recipe.servings} ${t('servings')}
+                                        </div>
+                                    </div>
+                                </div>
+                            ` : `
+                                <button onclick="showRecipeSelector('${day}')" style="width: 100%; padding: 20px; background: var(--bg-elevated); border: 2px dashed var(--border-color); border-radius: 12px; color: var(--text-secondary); font-size: 15px; cursor: pointer; transition: all 0.3s;">
+                                    + ${currentLang === 'es' ? 'Agregar receta' : 'Afegir recepta'}
+                                </button>
+                            `}
+                        </div>
+                    `;
+                }).join('')}
+            </div>
+        </div>
+    `;
+    
+    container.innerHTML = html;
+};
+
+window.clearDay = (day) => {
+    delete state.mealPlan[day];
+    Storage.save('mealPlan', state.mealPlan);
+    renderView('planner');
+};
+
+window.showRecipeSelector = (day) => {
+    const modal = document.createElement('div');
+    modal.className = 'modal-overlay';
+    modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.9); z-index: 1000; display: flex; align-items: flex-end; padding: 0;';
+    
+    modal.innerHTML = `
+        <div style="background: var(--bg-secondary); width: 100%; max-height: 70vh; border-radius: 24px 24px 0 0; overflow: hidden; animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);">
+            <div style="padding: 20px; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between;">
+                <h3 style="font-size: 20px; font-weight: 700; color: var(--text-primary);">
+                    ${currentLang === 'es' ? 'Elige una receta' : 'Tria una recepta'}
+                </h3>
+                <button onclick="this.closest('.modal-overlay').remove()" style="background: none; border: none; color: var(--text-secondary); font-size: 28px; cursor: pointer; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                    ×
+                </button>
+            </div>
+            <div style="overflow-y: auto; max-height: calc(70vh - 80px); padding: 16px;">
+                ${state.recipes.map(recipe => `
+                    <div onclick="assignRecipeToDay('${day}', '${recipe.id}')" style="display: flex; gap: 12px; padding: 12px; margin-bottom: 8px; background: var(--bg-card); border-radius: 12px; cursor: pointer; border: 2px solid var(--border-color); transition: all 0.2s;">
+                        ${recipe.image ? `
+                            <img src="${recipe.image}" style="width: 60px; height: 60px; border-radius: 10px; object-fit: cover;">
+                        ` : `
+                            <div style="width: 60px; height: 60px; border-radius: 10px; background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-bronze) 100%); display: flex; align-items: center; justify-content: center; font-size: 28px;">
+                                ${getCategoryIcon(recipe.category)}
+                            </div>
+                        `}
+                        <div style="flex: 1;">
+                            <div style="font-weight: 600; color: var(--text-primary);">${recipe.name}</div>
+                            <div style="color: var(--text-secondary); font-size: 13px; margin-top: 4px;">
+                                ⏱️ ${recipe.preparationTime} min
+                            </div>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) modal.remove();
+    });
+};
+
+window.assignRecipeToDay = (day, recipeId) => {
+    state.mealPlan[day] = recipeId;
+    Storage.save('mealPlan', state.mealPlan);
+    document.querySelector('.modal-overlay')?.remove();
+    renderView('planner');
+};
