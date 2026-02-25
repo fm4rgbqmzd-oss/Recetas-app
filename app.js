@@ -1,77 +1,3 @@
-// Optimized Bilingual Dictionary - ES <-> CA
-const bilingualPairs = {
-    // Básicos
-    'harina': 'farina', 'azucar': 'sucre', 'azúcar': 'sucre', 'sal': 'sal',
-    'aceite': 'oli', 'agua': 'aigua', 'mantequilla': 'mantega',
-    // Lácteos
-    'leche': 'llet', 'queso': 'formatge', 'yogur': 'iogurt', 'nata': 'nata',
-    'huevo': 'ou', 'huevos': 'ous', 'yema': 'rovell',
-    // Carnes
-    'pollo': 'pollastre', 'cerdo': 'porc', 'ternera': 'vedella', 'cordero': 'xai',
-    'jamon': 'pernil', 'jamón': 'pernil', 'tocino': 'cansalada',
-    'chorizo': 'xoriço', 'salchicha': 'salsitxa',
-    // Pescados
-    'pescado': 'peix', 'salmon': 'salmó', 'salmón': 'salmó', 'atun': 'tonyina', 'atún': 'tonyina',
-    'merluza': 'lluç', 'bacalao': 'bacallà', 'sardina': 'sardina',
-    'gamba': 'gamba', 'langostino': 'llagostí', 'mejillon': 'musclo', 'mejillón': 'musclo',
-    // Verduras
-    'tomate': 'tomàquet', 'cebolla': 'ceba', 'ajo': 'all', 'patata': 'patata',
-    'zanahoria': 'pastanaga', 'puerro': 'porro', 'calabacin': 'carabassó', 'calabacín': 'carabassó',
-    'berenjena': 'albergínia', 'pimiento': 'pebrot', 'pepino': 'cogombre',
-    'lechuga': 'enciam', 'espinaca': 'espinac', 'col': 'col', 'coliflor': 'coliflor',
-    'brocoli': 'bròquil', 'brócoli': 'bròquil', 'alcachofa': 'carxofa',
-    'esparrago': 'espàrrec', 'espárrago': 'espàrrec', 'judia': 'mongeta', 'judía': 'mongeta',
-    'guisante': 'pèsol', 'haba': 'fava', 'garbanzo': 'cigró', 'lenteja': 'llentia',
-    'champiñon': 'xampinyó', 'champiñón': 'xampinyó', 'seta': 'bolet',
-    'maiz': 'blat de moro', 'maíz': 'blat de moro', 'remolacha': 'remolatxa',
-    // Frutas
-    'manzana': 'poma', 'pera': 'pera', 'platano': 'plàtan', 'plátano': 'plàtan',
-    'naranja': 'taronja', 'mandarina': 'mandarina', 'limon': 'llimona', 'limón': 'llimona',
-    'uva': 'raïm', 'cereza': 'cirera', 'fresa': 'maduixa', 'frambuesa': 'gerd',
-    'melocoton': 'préssec', 'melocotón': 'préssec', 'ciruela': 'pruna',
-    'sandia': 'síndria', 'sandía': 'síndria', 'melon': 'meló', 'melón': 'meló',
-    'kiwi': 'kiwi', 'mango': 'mango', 'piña': 'pinya', 'aguacate': 'alvocat',
-    // Cereales
-    'arroz': 'arròs', 'trigo': 'blat', 'avena': 'civada', 'pan': 'pa',
-    'pasta': 'pasta', 'lentejas': 'llenties', 'garbanzos': 'cigrons',
-    // Frutos secos
-    'nuez': 'nou', 'almendra': 'ametlla', 'avellana': 'avellana', 'pistacho': 'pistatxo',
-    'castaña': 'castanya', 'cacahuete': 'cacauet',
-    // Especias
-    'oregano': 'orenga', 'orégano': 'orenga', 'albahaca': 'alfàbrega',
-    'tomillo': 'farigola', 'romero': 'romaní', 'perejil': 'julivert',
-    'cilantro': 'coriandre', 'menta': 'menta', 'canela': 'canyella',
-    // Dulces
-    'chocolate': 'xocolata', 'cacao': 'cacau', 'miel': 'mel',
-    'tarta': 'pastís', 'bizcocho': 'bescuit', 'galleta': 'galeta',
-    // Bebidas
-    'cafe': 'cafè', 'café': 'cafè', 'te': 'te', 'té': 'te',
-    'vino': 'vi', 'cerveza': 'cervesa', 'zumo': 'suc'
-};
-
-// Create reverse lookup
-const reverseLookup = {};
-Object.keys(bilingualPairs).forEach(es => {
-    const ca = bilingualPairs[es];
-    reverseLookup[ca] = es;
-});
-
-const normalizeText = (text) => {
-    return text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
-};
-
-const ingredientsMatch = (name1, name2) => {
-    const norm1 = normalizeText(name1);
-    const norm2 = normalizeText(name2);
-    
-    if (norm1 === norm2) return true;
-    
-    if (bilingualPairs[norm1] && normalizeText(bilingualPairs[norm1]) === norm2) return true;
-    if (reverseLookup[norm1] && normalizeText(reverseLookup[norm1]) === norm2) return true;
-    
-    return false;
-};
-
 // Translations
 const translations = {
     es: {
@@ -81,7 +7,7 @@ const translations = {
         canMake: 'Puedo hacer', almost: 'Casi', noRecipes: 'No hay recetas',
         tapToAdd: 'Toca el botón + para agregar', newRecipe: 'Nueva Receta', editRecipe: 'Editar Receta',
         min: 'min', servings: 'porciones', easy: 'Fácil', medium: 'Media', hard: 'Difícil',
-        haveAll: '¡Tienes todos los ingredientes!', missing: 'Te faltan', ingredients: 'ingredientes',
+        haveAll: 'Tienes todos los ingredientes!', missing: 'Te faltan', ingredients: 'ingredientes',
         addMissing: 'Agregar faltantes a compras', ingredientsTitle: 'Ingredientes',
         preparation: 'Preparación', deleteConfirm: '¿Estás seguro? Esta acción no se puede deshacer.',
         recipeName: 'Nombre de la receta', category: 'Categoría',
@@ -124,6 +50,65 @@ const translations = {
     }
 };
 
+// Bilingual ingredient dictionary - expanded
+const bilingualIngredients = {
+    'harina': 'farina', 'farina': 'harina',
+    'azucar': 'sucre', 'sucre': 'azucar', 'azúcar': 'sucre',
+    'leche': 'llet', 'llet': 'leche',
+    'huevo': 'ou', 'ou': 'huevo', 'huevos': 'ous', 'ous': 'huevos',
+    'aceite': 'oli', 'oli': 'aceite',
+    'mantequilla': 'mantega', 'mantega': 'mantequilla',
+    'sal': 'sal', 'agua': 'aigua', 'aigua': 'agua',
+    'pollo': 'pollastre', 'pollastre': 'pollo',
+    'cerdo': 'porc', 'porc': 'cerdo',
+    'ternera': 'vedella', 'vedella': 'ternera',
+    'jamon': 'pernil', 'pernil': 'jamon', 'jamón': 'pernil',
+    'tomate': 'tomaquet', 'tomaquet': 'tomate', 'tomàquet': 'tomate',
+    'cebolla': 'ceba', 'ceba': 'cebolla',
+    'ajo': 'all', 'all': 'ajo',
+    'patata': 'patata', 
+    'zanahoria': 'pastanaga', 'pastanaga': 'zanahoria',
+    'pimiento': 'pebrot', 'pebrot': 'pimiento',
+    'pepino': 'cogombre', 'cogombre': 'pepino',
+    'lechuga': 'enciam', 'enciam': 'lechuga',
+    'espinaca': 'espinac', 'espinac': 'espinaca',
+    'arroz': 'arros', 'arros': 'arroz', 'arròs': 'arroz',
+    'pan': 'pa', 'pa': 'pan',
+    'queso': 'formatge', 'formatge': 'queso',
+    'nata': 'nata', 'yogur': 'iogurt', 'iogurt': 'yogur',
+    'pescado': 'peix', 'peix': 'pescado',
+    'salmon': 'salmó', 'salmó': 'salmon', 'salmón': 'salmó',
+    'atun': 'tonyina', 'tonyina': 'atun', 'atún': 'tonyina',
+    'merluza': 'lluç', 'lluç': 'merluza',
+    'gamba': 'gamba', 'langostino': 'llagostí', 'llagostí': 'langostino',
+    'manzana': 'poma', 'poma': 'manzana',
+    'naranja': 'taronja', 'taronja': 'naranja',
+    'platano': 'platan', 'platan': 'platano', 'plátano': 'platan', 'plàtan': 'platano',
+    'limon': 'llimona', 'llimona': 'limon', 'limón': 'llimona',
+    'fresa': 'maduixa', 'maduixa': 'fresa',
+    'uva': 'raïm', 'raïm': 'uva',
+    'melon': 'meló', 'meló': 'melon', 'melón': 'meló',
+    'sandia': 'síndria', 'síndria': 'sandia', 'sandía': 'síndria',
+    'pera': 'pera', 'kiwi': 'kiwi', 'mango': 'mango',
+    'chocolate': 'xocolata', 'xocolata': 'chocolate',
+    'cafe': 'cafè', 'cafè': 'cafe', 'café': 'cafè',
+    'vino': 'vi', 'vi': 'vino',
+    'cerveza': 'cervesa', 'cervesa': 'cerveza',
+    'pasta': 'pasta', 'trigo': 'blat', 'blat': 'trigo',
+    'lenteja': 'llentia', 'llentia': 'lenteja',
+    'garbanzo': 'cigró', 'cigró': 'garbanzo',
+    'nuez': 'nou', 'nou': 'nuez',
+    'almendra': 'ametlla', 'ametlla': 'almendra',
+    'avellana': 'avellana',
+    'oregano': 'orenga', 'orenga': 'oregano', 'orégano': 'orenga',
+    'albahaca': 'alfàbrega', 'alfàbrega': 'albahaca',
+    'perejil': 'julivert', 'julivert': 'perejil',
+    'tomillo': 'farigola', 'farigola': 'tomillo',
+    'romero': 'romaní', 'romaní': 'romero', 'romani': 'romero',
+    'canela': 'canyella', 'canyella': 'canela',
+    'miel': 'mel', 'mel': 'miel'
+};
+
 let currentLang = 'es';
 
 const detectLanguage = () => {
@@ -152,6 +137,26 @@ const state = {
     editingRecipe: null,
     currentFilter: 'all',
     searchQuery: ''
+};
+
+const normalizeText = (text) => {
+    return text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
+};
+
+// Check if ingredients match (with bilingual support)
+const ingredientsMatch = (name1, name2) => {
+    const norm1 = normalizeText(name1);
+    const norm2 = normalizeText(name2);
+    
+    if (norm1 === norm2) return true;
+    
+    const equiv1 = bilingualIngredients[norm1];
+    if (equiv1 && normalizeText(equiv1) === norm2) return true;
+    
+    const equiv2 = bilingualIngredients[norm2];
+    if (equiv2 && normalizeText(equiv2) === norm1) return true;
+    
+    return false;
 };
 
 const generateId = () => {
@@ -187,6 +192,44 @@ const init = () => {
         renderView('recipes');
     }, 500);
 };
+
+const createSampleRecipe = () => {
+    const sampleRecipe = currentLang === 'ca' ? {
+        id: generateId(),
+        name: 'Creps Clàssiques',
+        category: 'breakfast',
+        preparationTime: 20,
+        servings: 4,
+        difficulty: 'easy',
+        ingredients: [
+            { id: generateId(), name: 'Farina', quantity: '2 tasses' },
+            { id: generateId(), name: 'Llet', quantity: '1.5 tasses' },
+            { id: generateId(), name: 'Ous', quantity: '2 unitats' },
+            { id: generateId(), name: 'Sucre', quantity: '2 cullerades' }
+        ],
+        steps: [
+            { id: generateId(), description: 'Barreja la farina, sucre i sal en un bol gran', image: null },
+            { id: generateId(), description: 'En un altre bol, bateix els ous amb la llet', image: null },
+            { id: generateId(), description: 'Incorpora els ingredients líquids als secs', image: null },
+            { id: generateId(), description: 'Cuina en una paella calenta fins daurar', image: null }
+        ],
+        image: null,
+        dateCreated: new Date().toISOString()
+    } : {
+        id: generateId(),
+        name: 'Pancakes Clásicos',
+        category: 'breakfast',
+        preparationTime: 20,
+        servings: 4,
+        difficulty: 'easy',
+        ingredients: [
+            { id: generateId(), name: 'Harina', quantity: '2 tazas' },
+            { id: generateId(), name: 'Leche', quantity: '1.5 tazas' },
+            { id: generateId(), name: 'Huevos', quantity: '2 piezas' },
+            { id: generateId(), name: 'Azúcar', quantity: '2 cucharadas' }
+        ],
+        steps: [
+            { id: generateId(), description: 'Mezcla la harina, azúcar y sal en un bowl grande', image: null },
             { id: generateId(), description: 'En otro bowl, bate los huevos con la leche', image: null },
             { id: generateId(), description: 'Incorpora los ingredientes líquidos a los secos', image: null },
             { id: generateId(), description: 'Cocina en sartén caliente hasta dorar', image: null }
