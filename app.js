@@ -1,3 +1,215 @@
+// Supabase Configuration
+const SUPABASE_URL = 'https://oxmkrftgngykbytzurdz.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im94bWtyZnRnbmd5a2J5dHp1cmR6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE5NjIxNDEsImV4cCI6MjA4NzUzODE0MX0.loPO7mLKLYTAHFz16CB-DEmeY-3BvLWm77ImYGfV3ig';
+
+// Simple Supabase client
+class SupabaseClient {
+    constructor(url, key) {
+        this.url = url;
+        this.headers = {
+            'apikey': key,
+            'Authorization': `Bearer ${key}`,
+            'Content-Type': 'application/json',
+            'Prefer': 'return=representation'
+        };
+    }
+
+    async query(table, method = 'GET', data = null) {
+        const url = `${this.url}/rest/v1/${table}`;
+        const options = {
+            method,
+            headers: this.headers
+        };
+        
+        if (data && (method === 'POST' || method === 'PATCH')) {
+            options.body = JSON.stringify(data);
+        }
+
+        try {
+            const response = await fetch(url, options);
+            if (!response.ok) {
+                throw new Error(`Supabase error: ${response.statusText}`);
+            }
+            return method === 'DELETE' ? true : await response.json();
+        } catch (error) {
+            console.error('Supabase error:', error);
+            return null;
+        }
+    }
+
+    async select(table, filter = '') {
+        const url = filter ? `${this.url}/rest/v1/${table}?${filter}` : `${this.url}/rest/v1/${table}`;
+        const response = await fetch(url, { headers: this.headers });
+        return response.ok ? await response.json() : [];
+    }
+
+    async insert(table, data) {
+        return this.query(table, 'POST', data);
+    }
+
+    async update(table, id, data) {
+        const url = `${this.url}/rest/v1/${table}?id=eq.${id}`;
+        const response = await fetch(url, {
+            method: 'PATCH',
+            headers: this.headers,
+            body: JSON.stringify(data)
+        });
+        return response.ok ? await response.json() : null;
+    }
+
+    async delete(table, id) {
+        const url = `${this.url}/rest/v1/${table}?id=eq.${id}`;
+        const response = await fetch(url, {
+            method: 'DELETE',
+            headers: this.headers
+        });
+        return response.ok;
+    }
+}
+
+const supabase = new SupabaseClient(SUPABASE_URL, SUPABASE_KEY);
+
+// Generate unique device ID
+const getDeviceId = () => {
+    let deviceId = localStorage.getItem('deviceId');
+    if (!deviceId) {
+        deviceId = 'device_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        localStorage.setItem('deviceId', deviceId);
+    }
+    return deviceId;
+};
+
+const DEVICE_ID = getDeviceId();
+
+// Sync Manager
+const SyncManager = {
+    syncInProgress: false,
+    lastSync: null,
+
+    async syncAll() {
+        if (this.syncInProgress) return;
+        this.syncInProgress = true;
+
+        try {
+            await this.syncRecipes();
+            await this.syncPantry();
+            await this.syncShopping();
+            await this.syncMealPlan();
+            await this.syncNotes();
+            this.lastSync = new Date().toISOString();
+            localStorage.setItem('lastSync', this.lastSync);
+        } catch (error) {
+            console.error('Sync error:', error);
+        } finally {
+            this.syncInProgress = false;
+        }
+    },
+
+    async syncRecipes() {
+        // Upload local recipes
+        for (const recipe of state.recipes) {
+            const existing = await supabase.select('recipes', `id=eq.${recipe.id}`);
+            if (existing.length === 0) {
+                await supabase.insert('recipes', { ...recipe, device_id: DEVICE_ID });
+            } else {
+                await supabase.update('recipes', recipe.id, { ...recipe, device_id: DEVICE_ID });
+            }
+        }
+
+        // Download remote recipes
+        const remoteRecipes = await supabase.select('recipes');
+        if (remoteRecipes) {
+            const localIds = new Set(state.recipes.map(r => r.id));
+            remoteRecipes.forEach(remote => {
+                if (!localIds.has(remote.id)) {
+                    state.recipes.push(remote);
+                }
+            });
+            Storage.save('recipes', state.recipes);
+        }
+    },
+
+    async syncPantry() {
+        // Clear and re-sync pantry
+        const remotePantry = await supabase.select('pantry');
+        if (remotePantry) {
+            // Upload local items not in remote
+            for (const item of state.pantry) {
+                const exists = remotePantry.find(r => r.id === item.id);
+                if (!exists) {
+                    await supabase.insert('pantry', { ...item, device_id: DEVICE_ID });
+                }
+            }
+            
+            // Update local with remote
+            state.pantry = remotePantry;
+            Storage.save('pantry', state.pantry);
+        }
+    },
+
+    async syncShopping() {
+        const remoteShopping = await supabase.select('shopping');
+        if (remoteShopping) {
+            for (const item of state.shopping) {
+                const exists = remoteShopping.find(r => r.id === item.id);
+                if (!exists) {
+                    await supabase.insert('shopping', { ...item, device_id: DEVICE_ID });
+                } else if (exists.completed !== item.completed) {
+                    await supabase.update('shopping', item.id, item);
+                }
+            }
+            state.shopping = remoteShopping;
+            Storage.save('shopping', state.shopping);
+        }
+    },
+
+    async syncMealPlan() {
+        const remotePlan = await supabase.select('meal_plan');
+        if (remotePlan && remotePlan.length > 0) {
+            const planData = remotePlan[0].data || {};
+            state.mealPlan = { ...state.mealPlan, ...planData };
+        }
+        
+        // Upload current plan
+        const existing = await supabase.select('meal_plan', `device_id=eq.${DEVICE_ID}`);
+        if (existing.length === 0) {
+            await supabase.insert('meal_plan', { device_id: DEVICE_ID, data: state.mealPlan });
+        } else {
+            await supabase.update('meal_plan', existing[0].id, { data: state.mealPlan });
+        }
+        Storage.save('mealPlan', state.mealPlan);
+    },
+
+    async syncNotes() {
+        const remoteNotes = await supabase.select('recipe_notes');
+        if (remoteNotes && remoteNotes.length > 0) {
+            const notesData = remoteNotes[0].data || {};
+            state.recipeNotes = { ...state.recipeNotes, ...notesData };
+        }
+        
+        const existing = await supabase.select('recipe_notes', `device_id=eq.${DEVICE_ID}`);
+        if (existing.length === 0) {
+            await supabase.insert('recipe_notes', { device_id: DEVICE_ID, data: state.recipeNotes });
+        } else {
+            await supabase.update('recipe_notes', existing[0].id, { data: state.recipeNotes });
+        }
+        Storage.save('recipeNotes', state.recipeNotes);
+    }
+};
+
+// Auto-sync every 10 seconds
+setInterval(() => {
+    if (!SyncManager.syncInProgress) {
+        SyncManager.syncAll();
+    }
+}, 10000);
+
+// Sync on visibility change (when app comes to foreground)
+document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) {
+        SyncManager.syncAll();
+    }
+});
 // Translations
 const translations = {
     es: {
@@ -168,6 +380,8 @@ const generateId = () => {
 const Storage = {
     save: (key, data) => {
         localStorage.setItem(key, JSON.stringify(data));
+        // Trigger sync after save
+        setTimeout(() => SyncManager.syncAll(), 100);
     },
     load: (key) => {
         const data = localStorage.getItem(key);
@@ -194,6 +408,14 @@ const init = () => {
         document.getElementById('loading').style.display = 'none';
         document.getElementById('main-app').style.display = 'flex';
         renderView('recipes');
+        
+        // Initial sync
+        SyncManager.syncAll().then(() => {
+            console.log('✓ Sincronización inicial completada');
+            if (state.currentView === 'recipes') {
+                renderView('recipes');
+            }
+        });
     }, 500);
 };
 
